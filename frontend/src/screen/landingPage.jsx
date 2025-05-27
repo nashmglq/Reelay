@@ -3,7 +3,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { authStore } from "../stores/authStore";
 import { Header } from "../components/header";
 import { AboutUs } from "../components/aboutUs";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const LandingPage = () => {
@@ -14,19 +14,21 @@ export const LandingPage = () => {
   const handleGoogleSuccess = async (googleCredentials) => {
     await login({ credentials: googleCredentials.credential });
   };
-
   const handleGoogleError = () => {
     console.error("Google Auth Error");
   };
 
-  useEffect(() => {
-    // if()
-  })
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"))
+  useEffect(()=>{
+    if(userInfo){
+      nav("/home")
+    }
+  },[userInfo])
+
 
   return (
     <div>
       <div className="min-h-screen flex flex-col">
-        {/* <Header /> */}
         <div className="flex-grow flex flex-col justify-center items-center">
           <h1 className="text-9xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-700 p-6">
             Reelay
@@ -50,7 +52,7 @@ export const LandingPage = () => {
           />
         </div>
       </div>
-      <AboutUs />
+      <AboutUs id="about" />
     </div>
   );
 };
