@@ -7,13 +7,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id         Int      @unique @id @default(autoincrement())
-  name       String   @db.VarChar(60)
-  email      String   @unique @db.VarChar(60)
-  googleId   String   @unique @db.VarChar(255)
+  id         Int     @id @unique @default(autoincrement())
+  name       String  @db.VarChar(60)
+  email      String  @unique @db.VarChar(60)
+  googleId   String  @unique @db.VarChar(255)
   profilePic String?
 
   @@map("user")
+}
+
+model GenAI {
+  id               Int      @id @unique @default(autoincrement())
+  title            String   @db.VarChar(60)
+  prompt           String   @db.VarChar(1000)
+  dateLastModified DateTime
+  createdAt        DateTime
+  thumbnailImage   String?
+  script           String   @db.VarChar(15000)
 }

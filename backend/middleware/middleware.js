@@ -13,7 +13,7 @@ const authCheck = (req, res, next) => {
     }
     next();
   } catch (err) {
-    return res.status(500).json({ error: "Token invalid." });
+    return res.status(500).json({ error: err.message });
   }
 };
 
