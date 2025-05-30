@@ -13,26 +13,57 @@ const newChat = async (req, res) => {
     const { title, platform } = req.body;
     const id = req.user.id;
 
-    const queryTitle = await prisma.script.findFirst({
+    if (!title || !platform)
+      return res.status(400).json({ error: "Please insert all fields" });
+
+    const queryTitle = await prisma.chat.findFirst({
       where: { title: title },
     });
 
-    if (queryTitle)
+    if (queryTitle.length > 0)
       return res.status(400).json({ error: `"${title}" already exist` });
 
-    const createNewChat = await prisma.script.create({
+    const createNewChat = await prisma.chat.create({
       data: {
         title: title,
-        prompt: null,
         createdAt: new Date(),
         dateLastModified: null,
-        content: null,
         platform: platform,
         userId: id,
       },
     });
 
     return res.status(200).json({ success: `Successfully created ${title}` });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+const getListViewChat = async (req, res) => {
+  try {
+    const id = req.user.id;
+    const fetchChat = await prisma.chat.findMany({
+      where: { userId: id },
+    });
+
+    if (fetchChat.userId != id)
+      return res.status(400).json({ error: "You are not authenticated" });
+
+    // console.log(fetchChat.length === 0 , !fetchChat.length)
+    // "!" turn value opposite, so 0 will be true
+
+    if (fetchChat.length === 0)
+      return res.status(400).json({ success: "No chats yet." });
+
+    return res.status(200).json({
+      success: [
+        fetchChat.id,
+        fetchChat.title,
+        fetchChat.platform,
+        fetchChat.createdAt,
+        fetchChat.dateLastModified,
+      ],
+    });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -53,6 +84,8 @@ const generateImage = async (req, res) => {
         responseModalities: [Modality.TEXT, Modality.IMAGE],
       },
     });
+    const date = Date.now();
+    const fileName = `${date}-${randomString}`;
     for (const part of response.candidates[0].content.parts) {
       console.log(response.candidates[0].content.parts);
       if (part.text) {
@@ -60,11 +93,14 @@ const generateImage = async (req, res) => {
       } else if (part.inlineData) {
         const imageData = part.inlineData.data;
         const buffer = Buffer.from(imageData, "base64");
-        fs.writeFileSync(`genImage/${randomString}.png`, buffer);
+        fs.writeFileSync(`genImage/${fileName}.png`, buffer);
 
-        return res
-          .status(200)
-          .json({ success: `Generated: ${randomString}.png` });
+        const saveImage = await prisma.genImage.create({
+          data: {
+            thumbnailImage: fileName,
+          },
+        });
+        return res.status(200).json({ success: `${fileName}` });
       }
     }
   } catch (err) {
@@ -77,14 +113,35 @@ const generateImage = async (req, res) => {
 
 const generateScript = async (req, res) => {
   try {
-    const { prompt, platform } = req.body;
+    const { prompt, platform, uuid } = req.body;
+    const id = req.user.id;
+    // if not user dont show
 
-    if (!prompt)
-      return res.status(400).json({ error: "Please input your prompt." });
+    if (!prompt || !platform || uuid)
+      return res
+        .status(400)
+        .json({ error: "Please input all the required fields." });
+
+    const findUserId = await prisma.chat.findUnique({
+      where: {
+        id: uuid,
+      },
+    });
+
+    if (findUserId.userId != id)
+      return res.status(400).json({ error: "You are not authenticated" });
 
     const promptMessage = `Please write a complete script for the platform "${platform}", based on the following idea:\n\n${prompt}`;
 
     const result = await model.generateContent(promptMessage);
+
+    const saveResult = await prisma.genText.create({
+      data: {
+        prompt: promptMessage,
+        content: result,
+        chatId: uuid,
+      },
+    });
 
     return res.status(200).json({ success: result.response.text() });
   } catch (err) {
@@ -92,4 +149,4 @@ const generateScript = async (req, res) => {
   }
 };
 
-module.exports = { newChat, generateImage, generateScript };
+module.exports = { newChat, getListViewChat, generateImage, generateScript };

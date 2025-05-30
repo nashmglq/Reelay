@@ -37,8 +37,8 @@ export const LandingPage = () => {
             Turn your ideas into{" "}
             <ReactTyped
               strings={["content...", "creations...", "projects..."]}
-              typeSpeed={100}
-              backSpeed={100}
+              typeSpeed={40}
+              backSpeed={40}
               loop
             ></ReactTyped>
           </h1>

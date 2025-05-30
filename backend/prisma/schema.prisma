@@ -8,36 +8,46 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @unique @default(autoincrement())
-  name       String   @db.VarChar(60)
-  email      String   @unique @db.VarChar(60)
-  googleId   String   @unique @db.VarChar(255)
+  id         Int     @id @unique @default(autoincrement())
+  name       String  @db.VarChar(60)
+  email      String  @unique @db.VarChar(60)
+  googleId   String  @unique @db.VarChar(255)
   profilePic String?
-  script     Script[]
+  chat       Chat[]
 
   @@map("user")
 }
 
-model Script {
-  id               String     @id @unique @default(uuid())
-  title            String     @unique @db.VarChar(60)
-  prompt           String    @db.VarChar(1000)
+model Chat {
+  id               String   @id @default(uuid())
+  title            String   @unique @db.VarChar(60)
   dateLastModified DateTime
   createdAt        DateTime
-  content          String    @db.VarChar(15000)
-  platform         String     @db.VarChar(60)
+  platform         String   @db.VarChar(60)
   userId           Int
-  user_Id          User       @relation(fields: [userId], references: [id])
-  genImage         GenImage[]
+  user_id          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("script")
+  genText  GenText[]
+  genImage GenImage[]
+
+  @@map("chat")
+}
+
+model GenText {
+  id      Int    @id @default(autoincrement())
+  prompt  String @db.VarChar(1000)
+  content String @db.VarChar(15000)
+  chatId  String
+  chat_id Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@map("genText")
 }
 
 model GenImage {
   image_id       Int     @id @unique @default(autoincrement())
   thumbnailImage String?
-  scriptId       String
-  script         Script  @relation(fields: [scriptId], references: [id])
+  chatId         String
+  chat_id        Chat    @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
   @@map("gen_image")
 }
