@@ -8,21 +8,36 @@ datasource db {
 }
 
 model User {
-  id         Int     @id @unique @default(autoincrement())
-  name       String  @db.VarChar(60)
-  email      String  @unique @db.VarChar(60)
-  googleId   String  @unique @db.VarChar(255)
+  id         Int      @id @unique @default(autoincrement())
+  name       String   @db.VarChar(60)
+  email      String   @unique @db.VarChar(60)
+  googleId   String   @unique @db.VarChar(255)
   profilePic String?
+  script     Script[]
 
   @@map("user")
 }
 
-model GenAI {
-  id               Int      @id @unique @default(autoincrement())
-  title            String   @db.VarChar(60)
-  prompt           String   @db.VarChar(1000)
+model Script {
+  id               String     @id @unique @default(uuid())
+  title            String     @unique @db.VarChar(60)
+  prompt           String    @db.VarChar(1000)
   dateLastModified DateTime
   createdAt        DateTime
-  thumbnailImage   String?
-  script           String   @db.VarChar(15000)
+  content          String    @db.VarChar(15000)
+  platform         String     @db.VarChar(60)
+  userId           Int
+  user_Id          User       @relation(fields: [userId], references: [id])
+  genImage         GenImage[]
+
+  @@map("script")
+}
+
+model GenImage {
+  image_id       Int     @id @unique @default(autoincrement())
+  thumbnailImage String?
+  scriptId       String
+  script         Script  @relation(fields: [scriptId], references: [id])
+
+  @@map("gen_image")
 }

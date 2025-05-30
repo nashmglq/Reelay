@@ -1,8 +1,10 @@
 const express = require("express");
 const route = express.Router()
 const { authCheck } = require("../middleware/middleware");
-const {postGenAi} = require("../controller/userGeneration")
+const {generateImage, generateScript, newChat} = require("../controller/userGeneration")
 
-route.post("/post-genai", authCheck, postGenAi)
+route.post("/create-chat", authCheck, newChat)
+route.post("/gen-image", authCheck, generateImage)
+route.post("/gen-script", authCheck, generateScript)
 
 module.exports = route
