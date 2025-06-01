@@ -24,6 +24,7 @@ model Chat {
   dateLastModified DateTime
   createdAt        DateTime
   platform         String   @db.VarChar(60)
+  typeOfChat       String   @db.VarChar(60)
   userId           Int
   user_id          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 

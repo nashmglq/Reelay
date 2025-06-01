@@ -6,21 +6,19 @@ import { Header } from "../components/header";
 export const ProtectedRoute = ({ children }) => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const nav = useNavigate();
-  let header = <Header/>;
+  let header = <Header />;
 
-  if(userInfo) header = <AuthHeader/>
+  if (userInfo) header = <AuthHeader />;
   useEffect(() => {
     if (!userInfo) {
       nav("/");
-    }else{
-      nav("/home")
     }
   }, [userInfo]);
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       {header}
-      {children}
+      <div className="flex-1">{children}</div>
     </div>
   );
 };
