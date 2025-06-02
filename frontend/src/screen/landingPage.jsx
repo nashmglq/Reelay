@@ -28,7 +28,7 @@ export const LandingPage = () => {
 
   return (
     <div>
-      <div className="min-h-screen flex flex-col">
+      <div className="h-screen flex flex-col">
         <div className="flex-grow flex flex-col justify-center items-center">
           <h1 className="text-9xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-700 p-6">
             Reelay
