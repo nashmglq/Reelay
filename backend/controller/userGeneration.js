@@ -17,7 +17,7 @@ const newChat = async (req, res) => {
       return res.status(400).json({ error: "Please insert all fields" });
 
     const queryTitle = await prisma.chat.findFirst({
-      where: { title: title },
+      where: { title, id },
     });
 
     if (queryTitle.length > 0)
@@ -30,7 +30,7 @@ const newChat = async (req, res) => {
         dateLastModified: null,
         platform: platform,
         userId: id,
-        typeOfChat: type
+        typeOfChat: type  
       },
     });
 

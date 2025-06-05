@@ -19,7 +19,7 @@ model User {
 }
 
 model Chat {
-  id               String   @id @default(uuid())
+  id               String   @unique @id @default(uuid())
   title            String   @unique @db.VarChar(60)
   dateLastModified DateTime
   createdAt        DateTime
@@ -35,7 +35,7 @@ model Chat {
 }
 
 model GenText {
-  id      Int    @id @default(autoincrement())
+  id      Int    @id @unique @default(autoincrement())
   prompt  String @db.VarChar(1000)
   content String @db.VarChar(15000)
   chatId  String
