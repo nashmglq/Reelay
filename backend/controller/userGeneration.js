@@ -17,20 +17,20 @@ const newChat = async (req, res) => {
       return res.status(400).json({ error: "Please insert all fields" });
 
     const queryTitle = await prisma.chat.findFirst({
-      where: { title, id },
+      where: { title, userId: id },
     });
 
-    if (queryTitle.length > 0)
+    if (queryTitle)
       return res.status(400).json({ error: `"${title}" already exist` });
 
     const createNewChat = await prisma.chat.create({
       data: {
         title: title,
         createdAt: new Date(),
-        dateLastModified: null,
+        dateLastModified: new Date(),
         platform: platform,
         userId: id,
-        typeOfChat: type  
+        typeOfChat: type,
       },
     });
 
@@ -46,8 +46,7 @@ const getListViewChat = async (req, res) => {
     const fetchChat = await prisma.chat.findMany({
       where: { userId: id },
     });
-
-    if (fetchChat.userId != id)
+    if (fetchChat[0].userId != id)
       return res.status(400).json({ error: "You are not authenticated" });
 
     // console.log(fetchChat.length === 0 , !fetchChat.length)
@@ -57,13 +56,7 @@ const getListViewChat = async (req, res) => {
       return res.status(400).json({ success: "No chats yet." });
 
     return res.status(200).json({
-      success: [
-        fetchChat.id,
-        fetchChat.title,
-        fetchChat.platform,
-        fetchChat.createdAt,
-        fetchChat.dateLastModified,
-      ],
+      success: [fetchChat],
     });
   } catch (err) {
     return res.status(500).json({ error: err.message });
@@ -72,7 +65,7 @@ const getListViewChat = async (req, res) => {
 
 const generateImage = async (req, res) => {
   try {
-    const { prompt } = req.body;
+    const { prompt, uuid } = req.body;
     if (!prompt)
       return res.status(400).json({ error: "Please input your prompt." });
     const randomString = crypto.randomBytes(10).toString("hex").slice(0, 10);
@@ -88,9 +81,7 @@ const generateImage = async (req, res) => {
     const date = Date.now();
     const fileName = `${date}-${randomString}`;
     for (const part of response.candidates[0].content.parts) {
-      console.log(response.candidates[0].content.parts);
       if (part.text) {
-        console.log(part.text);
       } else if (part.inlineData) {
         const imageData = part.inlineData.data;
         const buffer = Buffer.from(imageData, "base64");
@@ -99,13 +90,13 @@ const generateImage = async (req, res) => {
         const saveImage = await prisma.genImage.create({
           data: {
             thumbnailImage: fileName,
+            chatId : uuid
           },
         });
         return res.status(200).json({ success: `${fileName}` });
       }
     }
   } catch (err) {
-    console.error("Error in postGenAi:", err);
     return res.status(500).json({
       error: err.message,
     });
@@ -118,28 +109,21 @@ const generateScript = async (req, res) => {
     const id = req.user.id;
     // if not user dont show
 
-    if (!prompt || !platform || uuid)
+    if (!prompt || !platform || !uuid)
       return res
         .status(400)
         .json({ error: "Please input all the required fields." });
 
-    const findUserId = await prisma.chat.findUnique({
-      where: {
-        id: uuid,
-      },
-    });
-
-    if (findUserId.userId != id)
-      return res.status(400).json({ error: "You are not authenticated" });
-
-    const promptMessage = `Please write a complete script for the platform "${platform}", based on the following idea:\n\n${prompt}`;
+    const promptMessage = `Please write a complete script for the platform "${platform}" based on the following idea:
+    \n\n ${prompt}
+    \n\n Only return the script. Do not include any additional messages.`;
 
     const result = await model.generateContent(promptMessage);
 
     const saveResult = await prisma.genText.create({
       data: {
-        prompt: promptMessage,
-        content: result,
+        prompt,
+        content: result.response.text(),
         chatId: uuid,
       },
     });
