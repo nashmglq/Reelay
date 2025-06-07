@@ -99,3 +99,54 @@ export const newChatStore = create(
     },
   }))
 );
+
+
+export const listViewOfChatStore = create(
+  devtools((set) => ({
+    loading: false,
+    success: false,
+    error: false,
+    message: [],
+
+    listView: async (formData) => {
+      try {
+        set({ loading: true, success: false, error: false, message: [] });
+
+        const getToken = JSON.parse(localStorage.getItem("userInfo"));
+        const token = getToken ? getToken.token : null;
+        const config = token
+          ? {
+              headers: {
+                Accept: "application/json",
+                Bearer: `Bearer ${token}`,
+              },
+            }
+          : null;
+
+        const response = await axios.get(
+          `${baseUrl}/crud-genAi/create-chat`, // change this
+          config
+        );
+
+        if (response.data && response.data.success) {
+          return set({
+            loading: false,
+            success: true,
+            error: false,
+            message: response.data.success,
+          });
+        }
+      } catch (err) {
+        return set({
+          loading: false,
+          success: false,
+          error: true,
+          message:
+            err.response.data && err.response.data.error
+              ? err.response.data.error
+              : "Something went wrong.",
+        });
+      }
+    },
+  }))
+);
