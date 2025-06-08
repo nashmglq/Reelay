@@ -108,7 +108,7 @@ export const listViewOfChatStore = create(
     error: false,
     message: [],
 
-    listView: async (formData) => {
+    listView: async () => {
       try {
         set({ loading: true, success: false, error: false, message: [] });
 
@@ -124,7 +124,7 @@ export const listViewOfChatStore = create(
           : null;
 
         const response = await axios.get(
-          `${baseUrl}/crud-genAi/create-chat`, // change this
+          `${baseUrl}/crud-genAi/get-chats`, 
           config
         );
 

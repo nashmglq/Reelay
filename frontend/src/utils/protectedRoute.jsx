@@ -16,9 +16,9 @@ export const ProtectedRoute = ({ children }) => {
   }, [userInfo]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div>
       {header}
-      <div className="flex-1">{children}</div>
+     {children}
     </div>
   );
 };
