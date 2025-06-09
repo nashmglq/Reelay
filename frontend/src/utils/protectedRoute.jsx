@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthHeader } from "../components/authHeader";
+import { AuthHeader } from "../components/authComp/authHeader";
 import { Header } from "../components/header";
 
 export const ProtectedRoute = ({ children }) => {

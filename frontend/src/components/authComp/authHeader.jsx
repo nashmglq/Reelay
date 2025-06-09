@@ -21,17 +21,6 @@ export const AuthHeader = () => {
         </Link>
       </div>
       <div className="flex w-full justify-end gap-x-10">
-        <Link to="/user">
-          <button className="font-normal text-white transition-all duration-300 hover:scale-110">
-            <User />
-          </button>
-        </Link>
-        <Link to="/create-chat">
-          <button className="font-normal text-white transition-all duration-300 hover:scale-110">
-            <Plus />
-          </button>
-        </Link>
-
         <button
           className="font-normal text-white transition-all duration-300 hover:scale-110"
           onClick={logoutHandler}
