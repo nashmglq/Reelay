@@ -48,6 +48,53 @@ export const authStore = create(
   }))
 );
 
+export const getProfileStore = create(
+  devtools((set) => ({
+    loading: false,
+    success: false,
+    error: false,
+    message: [],
+
+    getProfile: async () => {
+      try {
+        set({ loading: true, success: false, error: false, message: [] });
+
+        const getToken = JSON.parse(localStorage.getItem("userInfo"));
+        const token = getToken ? getToken.token : null;
+        const config = token
+          ? {
+              headers: {
+                Accept: "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          : null;
+
+        const response = await axios.get(`${baseUrl}/auth/get-profile`, config);
+
+        if (response.data && response.data.success) {
+          set({
+            loading: false,
+            success: true,
+            error: false,
+            message: response.data.success,
+          });
+        }
+      } catch (err) {
+        set({
+          loading: false,
+          success: false,
+          error: false,
+          message:
+            err.response && err.response.data
+              ? err.response.data.error
+              : "Something went wrong",
+        });
+      }
+    },
+  }))
+);
+
 // create( devtools( (set) => ( { } )  )  )
 export const newChatStore = create(
   devtools((set) => ({
@@ -66,7 +113,7 @@ export const newChatStore = create(
           ? {
               headers: {
                 Accept: "application/json",
-                Bearer: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
               },
             }
           : null;
@@ -100,7 +147,6 @@ export const newChatStore = create(
   }))
 );
 
-
 export const listViewOfChatStore = create(
   devtools((set) => ({
     loading: false,
@@ -124,7 +170,7 @@ export const listViewOfChatStore = create(
           : null;
 
         const response = await axios.get(
-          `${baseUrl}/crud-genAi/get-chats`, 
+          `${baseUrl}/crud-genAi/get-chats`,
           config
         );
 
