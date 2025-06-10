@@ -1,14 +1,10 @@
-import { AddChat } from "../components/addChat";
+import { AddChat } from "../components/authComp/addChat";
 import { ListChat } from "../components/authComp/listChat";
 
 export const Home = () => {
   return (
     <div>
-
-        
-      <div>
-        <ListChat />
-      </div>
+      <ListChat />
 
       <AddChat />
     </div>

@@ -8,7 +8,6 @@ export const ListChat = () => {
   useEffect(() => {
     listView();
   }, [listView]);
-  console.log(message);
 
   const dateFormat = (data) => {
     if (!data) return "";

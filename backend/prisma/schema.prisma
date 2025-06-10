@@ -19,12 +19,12 @@ model User {
 }
 
 model Chat {
-  id               String   @unique @id @default(uuid())
+  id               String   @id @unique @default(uuid())
   title            String   @unique @db.VarChar(60)
   dateLastModified DateTime
   createdAt        DateTime
-  platform         String   @db.VarChar(60)
-  typeOfChat       String   @db.VarChar(60)
+  platform         String[] @db.VarChar(60)
+  typeOfChat       String[] @db.VarChar(60)
   userId           Int
   user_id          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 

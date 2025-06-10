@@ -10,10 +10,10 @@ const crypto = require("crypto");
 
 const newChat = async (req, res) => {
   try {
-    const { title, platform, type } = req.body;
+    const { title, selectedPlatforms, selectedTypes } = req.body;
     const id = req.user.id;
 
-    if (!title || !platform || !type)
+    if (!title || selectedPlatforms.length === 0 || selectedTypes.length === 0)
       return res.status(400).json({ error: "Please insert all fields" });
 
     const queryTitle = await prisma.chat.findFirst({
@@ -28,9 +28,9 @@ const newChat = async (req, res) => {
         title: title,
         createdAt: new Date(),
         dateLastModified: new Date(),
-        platform: platform,
+        platform: selectedPlatforms,
         userId: id,
-        typeOfChat: type,
+        typeOfChat: selectedTypes,
       },
     });
 
