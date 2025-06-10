@@ -46,7 +46,7 @@ const verificationGoogleToken = async (req, res) => {
       expiresIn: "8h",
     });
 
-    return res.status(200).json({ success: token });
+    return res.status(200).json({ success: {token: token} });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }

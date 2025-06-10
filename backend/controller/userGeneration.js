@@ -56,7 +56,7 @@ const getListViewChat = async (req, res) => {
       return res.status(400).json({ success: "No chats yet." });
 
     return res.status(200).json({
-      success: [fetchChat],
+      success: fetchChat
     });
   } catch (err) {
     return res.status(500).json({ error: err.message });
