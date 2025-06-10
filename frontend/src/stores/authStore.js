@@ -159,12 +159,13 @@ export const listViewOfChatStore = create(
         set({ loading: true, success: false, error: false, message: [] });
 
         const getToken = JSON.parse(localStorage.getItem("userInfo"));
+
         const token = getToken ? getToken.token : null;
         const config = token
           ? {
               headers: {
                 Accept: "application/json",
-                Bearer: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
               },
             }
           : null;
