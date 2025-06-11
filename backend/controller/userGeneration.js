@@ -56,11 +56,36 @@ const getListViewChat = async (req, res) => {
       return res.status(400).json({ success: "No chats yet." });
 
     return res.status(200).json({
-      success: fetchChat
+      success: fetchChat,
     });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
+};
+
+const searchChat = async (req, res) => {
+  try {
+    const { query } = req.body;
+    const userId = req.user.id;
+    if (!query)
+      return res.status(400).json({ error: "Please provide a query" });
+
+    const search = await prisma.chat.findMany({
+      where: {
+        userId: userId,
+        title: {
+          contains: query,
+          mode : "insensitive"
+        },
+      },
+    });
+
+
+    return res.status(200).json({ success: search });
+  } catch (err) {
+      return res.status(500).json({ error: err.message });
+  }
+
 };
 
 const generateImage = async (req, res) => {
@@ -90,7 +115,7 @@ const generateImage = async (req, res) => {
         const saveImage = await prisma.genImage.create({
           data: {
             thumbnailImage: fileName,
-            chatId : uuid
+            chatId: uuid,
           },
         });
         return res.status(200).json({ success: `${fileName}` });
@@ -134,4 +159,4 @@ const generateScript = async (req, res) => {
   }
 };
 
-module.exports = { newChat, getListViewChat, generateImage, generateScript };
+module.exports = { newChat, getListViewChat, generateImage, generateScript, searchChat };
