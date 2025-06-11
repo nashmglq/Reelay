@@ -1,10 +1,18 @@
 import { Search } from "lucide-react";
-import { listViewOfChatStore } from "../../stores/authStore";
-import { useEffect } from "react";
+import { listViewOfChatStore, searchChats } from "../../stores/authStore";
+import { useEffect, useState } from "react";
 import { formatDistanceToNowStrict, format } from "date-fns";
 
 export const ListChat = () => {
   const { listView, loading, success, error, message } = listViewOfChatStore();
+  const {
+    queryChat,
+    loading: searchLoading,
+    success: searchSuccess,
+    error: searchError,
+    message: searchMessage,
+  } = searchChats();
+  const [query, setQuery] = useState("");
   useEffect(() => {
     listView();
   }, [listView]);
@@ -22,13 +30,23 @@ export const ListChat = () => {
     else return formatDistanceToNowStrict(createdDate, { addSuffix: true });
   };
 
+  const queryHandler = (e) => {
+    e.preventDefault();
+    const formData = { query };
+    queryChat(formData);
+  };
+
   return (
     <div>
-      <div className="flex justify-center items-center mt-20 ">
-        <form className="flex gap-x-2">
+      <div className="flex flex-col justify-center items-center mt-20 ">
+        {/* <h1>
+          {searchSuccess && searchMessage && query ? `Result based on your search...` : null}
+        </h1> */}
+        <form className="flex gap-x-2" onSubmit={queryHandler}>
           <input
             className="border-2 rounded-lg w-[700px] p-2"
             placeholder="Search chat..."
+            onChange={(e) => setQuery(e.target.value)}
           />
           <button className="text-white bg-black border-2 rounded-lg px-4">
             <Search />
@@ -36,7 +54,22 @@ export const ListChat = () => {
         </form>
       </div>
       <div className="flex flex-col justify-center items-center mt-2 ">
-        {message
+        {searchSuccess && searchMessage
+          ? searchMessage.map((query) => (
+              <div className="border-2 rounded-lg  w-1/2 p-4 my-2 hover:scale-105 duration-300">
+                <div className="flex justify-between">
+                  <h1 className="font-semibold">{query.title}</h1>
+                  <h1 className="text-neutral-400">
+                    {dateFormat(
+                      query.dateLastModified
+                        ? query.dateLastModified
+                        : query.createdDate
+                    )}
+                  </h1>
+                </div>
+              </div>
+            ))
+          : success && message
           ? message.map((chat, index) => (
               <div className="border-2 rounded-lg  w-1/2 p-4 my-2 hover:scale-105 duration-300">
                 <div className="flex justify-between">
