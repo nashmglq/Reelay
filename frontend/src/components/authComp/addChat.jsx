@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { X, Plus, Loader, DiscAlbum } from "lucide-react";
-import { newChatStore } from "../../stores/authStore";
+import { listViewOfChatStore, newChatStore } from "../../stores/authStore";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 export const AddChat = () => {
   const { newChat, loading, success, error, message } = newChatStore();
+  const { listView } = listViewOfChatStore();
   const [show, setShow] = useState(false);
   const platforms = ["Tiktok", "Youtube", "Facebook"];
   const types = ["Script", "Image", "Script & Image"];
@@ -42,6 +43,13 @@ export const AddChat = () => {
       toast.dismiss();
     };
   }, [message]);
+
+  useEffect(() => {
+    if (!loading && success) {
+      listView();
+      setShow(false);
+    }
+  }, [loading, message]);
 
   return (
     <div>
@@ -157,11 +165,12 @@ export const AddChat = () => {
                 ))}
               </div>
 
-              <button className= {`flex justify-center items-center w-full bg-black my-2 text-white rounded-lg p-2 hover:bg-gray-900 duration-300
+              <button
+                className={`flex justify-center items-center w-full bg-black my-2 text-white rounded-lg p-2 hover:bg-gray-900 duration-300
               ${loading ? "bg-gray-900" : ""}`}
-              disabled={loading}
+                disabled={loading}
               >
-                {loading ? <Loader className="animate-spin"/> : "Create"}
+                {loading ? <Loader className="animate-spin" /> : "Create"}
               </button>
             </form>
           </div>

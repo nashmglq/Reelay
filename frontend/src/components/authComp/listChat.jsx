@@ -37,14 +37,15 @@ export const ListChat = () => {
   };
 
   return (
-    <div>
-      <div className="flex flex-col justify-center items-center mt-20 ">
-        {/* <h1>
-          {searchSuccess && searchMessage && query ? `Result based on your search...` : null}
-        </h1> */}
-        <form className="flex gap-x-2" onSubmit={queryHandler}>
+    <div className="flex flex-col">
+      <div className="flex flex-col justify-center items-center w-full mt-20 ">
+        
+        <form
+          className="flex justify-center gap-x-2 w-full"
+          onSubmit={queryHandler}
+        >
           <input
-            className="border-2 rounded-lg w-[700px] p-2"
+            className="border-2 rounded-lg w-[80%] p-2"
             placeholder="Search chat..."
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -52,39 +53,41 @@ export const ListChat = () => {
             <Search />
           </button>
         </form>
-      </div>
-      <div className="flex flex-col justify-center items-center mt-2 ">
-        {searchSuccess && searchMessage
-          ? searchMessage.map((query) => (
-              <div className="border-2 rounded-lg  w-1/2 p-4 my-2 hover:scale-105 duration-300">
-                <div className="flex justify-between">
-                  <h1 className="font-semibold">{query.title}</h1>
-                  <h1 className="text-neutral-400">
-                    {dateFormat(
-                      query.dateLastModified
-                        ? query.dateLastModified
-                        : query.createdDate
-                    )}
-                  </h1>
+
+        <div className="flex items-center flex-col min-h-[500px] w-full">   
+            
+          {searchSuccess && searchMessage
+            ? searchMessage.map((query) => (
+                <div className="border-2 rounded-lg  w-[85%] p-4 my-2 hover:scale-105 duration-300">
+                  <div className="flex justify-between">
+                    <h1 className="font-semibold">{query.title}</h1>
+                    <h1 className="text-neutral-400">
+                      {dateFormat(
+                        query.dateLastModified
+                          ? query.dateLastModified
+                          : query.createdDate
+                      )}
+                    </h1>
+                  </div>
                 </div>
-              </div>
-            ))
-          : success && message
-          ? message.map((chat, index) => (
-              <div className="border-2 rounded-lg  w-1/2 p-4 my-2 hover:scale-105 duration-300">
-                <div className="flex justify-between">
-                  <h1 className="font-semibold">{chat.title}</h1>
-                  <h1 className="text-neutral-400">
-                    {dateFormat(
-                      chat.dateLastModified
-                        ? chat.dateLastModified
-                        : chat.createdDate
-                    )}
-                  </h1>
+              ))
+            : success && message
+            ? message.map((chat, index) => (
+                <div className="border-2 rounded-lg  w-[85%] p-4 my-2 hover:scale-105 duration-300">
+                  <div className="flex justify-between">
+                    <h1 className="font-semibold">{chat.title}</h1>
+                    <h1 className="text-neutral-400">
+                      {dateFormat(
+                        chat.dateLastModified
+                          ? chat.dateLastModified
+                          : chat.createdDate
+                      )}
+                    </h1>
+                  </div>
                 </div>
-              </div>
-            ))
-          : null}
+              ))
+            : null}
+        </div>
       </div>
     </div>
   );

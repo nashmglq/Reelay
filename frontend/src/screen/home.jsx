@@ -5,8 +5,14 @@ import { Profile } from "../components/authComp/profile";
 export const Home = () => {
   return (
     <div>
-      {/* <Profile/> */}
-      <ListChat />
+      <div className="flex p-4 gap-x-10">
+        <div className="w-[20%] ">
+          <Profile />
+        </div>
+        <div className="w-[60%] ">
+          <ListChat />
+        </div>
+      </div>
 
       <AddChat />
     </div>
