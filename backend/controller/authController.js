@@ -46,7 +46,7 @@ const verificationGoogleToken = async (req, res) => {
       expiresIn: "8h",
     });
 
-    return res.status(200).json({ success: {token: token} });
+    return res.status(200).json({ success: { token: token } });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -55,21 +55,25 @@ const verificationGoogleToken = async (req, res) => {
 const getProfile = async (req, res) => {
   try {
     const id = req.user.id;
-    console.log(id)
-    if (!id) return res.status(400).json({ error: "No ID found." });
 
-    const user = await prisma.user.findUnique({ where: {id} });
+    if (!id) return res.status(400).json({ error: "No ID found." });
+    // To only select the fields, and we won't expose data...
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        profilePic: true,
+      },
+    });
 
     if (!user) return res.status(400).json({ error: "No user found." });
 
-    return res
-      .status(200)
-      .json({ success: [user.id, user.name, user.email, user.profilePic] });
+    return res.status(200).json({ success: user });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
 };
-
-
 
 module.exports = { verificationGoogleToken, getProfile };
