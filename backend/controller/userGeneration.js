@@ -75,17 +75,36 @@ const searchChat = async (req, res) => {
         userId: userId,
         title: {
           contains: query,
-          mode : "insensitive"
+          mode: "insensitive",
         },
       },
     });
-
-
     return res.status(200).json({ success: search });
   } catch (err) {
-      return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
+};
 
+const getDetailChat = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    if (!id) return res.status(400).json({ error: "Please provide an ID" });
+
+    const getDetail = await prisma.chat.findUnique({
+      where: {
+        userId: userId,
+        id: id,
+      },
+    });
+
+    if(!getDetail) return res.status(400).json({error: "Chat is not found."})
+
+    return res.status(200).json({ success: getDetail });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 };
 
 const generateImage = async (req, res) => {
@@ -159,4 +178,11 @@ const generateScript = async (req, res) => {
   }
 };
 
-module.exports = { newChat, getListViewChat, generateImage, generateScript, searchChat };
+module.exports = {
+  newChat,
+  getListViewChat,
+  generateImage,
+  generateScript,
+  searchChat,
+  getDetailChat
+};
