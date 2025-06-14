@@ -66,11 +66,13 @@ export const AddChat = () => {
       />
       <button
         onClick={showHandler}
-        className="right-10 
-        bottom-10 fixed
+        className="right-2 bottom-2 
+        sm:right-10 sm:bottom-10
+        p-1
+        sm:p-4
+        fixed
         border-2 rounded-full
         hover:scale-110 duration-300
-        p-4
         font-bold"
       >
         <Plus size={40} />
@@ -78,7 +80,7 @@ export const AddChat = () => {
 
       {show ? (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
-          <div className=" rounded-lg w-1/3 flex flex-col justify-center items-center shadow-lg p-4 bg-white border-nuetral-400">
+          <div className=" rounded-lg w-[95%] sm:w-1/3 flex flex-col justify-center items-center shadow-lg p-4 bg-white border-nuetral-400">
             <button
               className="block flex w-full justify-end"
               onClick={showHandler}

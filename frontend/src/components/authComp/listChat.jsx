@@ -58,7 +58,7 @@ export const ListChat = () => {
             
           {searchSuccess && searchMessage
             ? searchMessage.map((query) => (
-                <div className="border-2 rounded-lg  w-[85%] p-4 my-2 hover:scale-105 duration-300">
+                <div className="border-2 rounded-lg  w-[100%] sm:w-[85%] p-4 my-2 hover:scale-105 duration-300">
                   <div className="flex justify-between">
                     <h1 className="font-semibold">{query.title}</h1>
                     <h1 className="text-neutral-400">
@@ -73,7 +73,7 @@ export const ListChat = () => {
               ))
             : success && message
             ? message.map((chat, index) => (
-                <div className="border-2 rounded-lg  w-[85%] p-4 my-2 hover:scale-105 duration-300">
+                <div className="border-2 rounded-lg  w-[100%] sm:w-[85%] p-4 my-2 hover:scale-105 duration-300">
                   <div className="flex justify-between">
                     <h1 className="font-semibold">{chat.title}</h1>
                     <h1 className="text-neutral-400">
