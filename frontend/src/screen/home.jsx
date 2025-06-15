@@ -7,7 +7,7 @@ export const Home = () => {
     <div>
       <div className="flex p-4 gap-x-10">
         <div className="hidden sm:block w-[20%] ">
-          {/* <Profile /> */}
+          <Profile />
         </div>
         <div className="w-[100%] sm:w-[60%]">
           <ListChat />
