@@ -23,8 +23,15 @@ export const Profile = () => {
 
     // this will handel the rest...
     window.addEventListener("resize", handelChange);
-    //remove event each time...
-    return () => window.removeEventListener("resize", handelChange);
+  // This return is a cleanup function.
+  // It removes the old event listener when the component is removed or updated,
+  // to avoid stacking multiple listeners and prevent memory leaks.
+
+    return () => {
+      window.removeEventListener("resize", handelChange)
+      // return becuase when refersh it will remove..
+      console.log("RETURN")
+    };
     // no need to add window.innerWidth because is not a reactive value
   }, []);
 
