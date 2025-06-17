@@ -89,7 +89,7 @@ const getDetailChat = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user.id;
-
+    console.log(id)
     if (!id) return res.status(400).json({ error: "Please provide an ID" });
 
     const getDetail = await prisma.chat.findUnique({
