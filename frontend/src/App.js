@@ -3,7 +3,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { LandingPage } from "./screen/landingPage";
 import { Home } from "./screen/home";
 import { ProtectedRoute } from "./utils/protectedRoute";
-
+import { DetailChat } from "./screen/detailChat";
 
 function App() {
   const clientId = process.env.REACT_APP_CLIENT_ID;
@@ -29,6 +29,16 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            <Route
+              path="/chat/:id"
+              element={
+                <ProtectedRoute>
+                  <DetailChat />
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="*" element={<Navigate to="/home" />}></Route>
           </Routes>
         </GoogleOAuthProvider>

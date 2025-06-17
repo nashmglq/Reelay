@@ -2,6 +2,7 @@ import { Search } from "lucide-react";
 import { listViewOfChatStore, searchChats } from "../../stores/authStore";
 import { useEffect, useState } from "react";
 import { formatDistanceToNowStrict, format } from "date-fns";
+import { Link } from "react-router-dom";
 
 export const ListChat = () => {
   const { listView, loading, success, error, message } = listViewOfChatStore();
@@ -38,8 +39,8 @@ export const ListChat = () => {
 
   return (
     <div className="flex flex-col">
+
       <div className="flex flex-col justify-center items-center w-full mt-20 ">
-        
         <form
           className="flex justify-center gap-x-2 w-full"
           onSubmit={queryHandler}
@@ -53,12 +54,17 @@ export const ListChat = () => {
             <Search />
           </button>
         </form>
+  
+      {/* <div className="w-full px-20">
+            {searchSuccess && query ? (<h1>Result based on your search...</h1>) : null}
+      </div> */}
 
-        <div className="flex items-center flex-col min-h-[500px] w-full">   
-            
+        <div className="flex items-center flex-col min-h-[500px] w-full">
           {searchSuccess && searchMessage
             ? searchMessage.map((query) => (
-                <div className="border-2 rounded-lg  w-[100%] sm:w-[85%] p-4 my-2 hover:scale-105 duration-300">
+                <div className="border-2 rounded-lg  w-[100%] sm:w-[85%] my-2 hover:scale-105 duration-300">
+                  <Link to = {`/chat/${query.id}`}
+                  className="block p-4">
                   <div className="flex justify-between">
                     <h1 className="font-semibold">{query.title}</h1>
                     <h1 className="text-neutral-400">
@@ -68,22 +74,24 @@ export const ListChat = () => {
                           : query.createdDate
                       )}
                     </h1>
-                  </div>
+                  </div></Link>
                 </div>
               ))
             : success && message
             ? message.map((chat, index) => (
-                <div className="border-2 rounded-lg  w-[100%] sm:w-[85%] p-4 my-2 hover:scale-105 duration-300">
-                  <div className="flex justify-between">
-                    <h1 className="font-semibold">{chat.title}</h1>
-                    <h1 className="text-neutral-400">
-                      {dateFormat(
-                        chat.dateLastModified
-                          ? chat.dateLastModified
-                          : chat.createdDate
-                      )}
-                    </h1>
-                  </div>
+                <div className="border-2 rounded-lg  w-[100%] sm:w-[85%] my-2 hover:scale-105 duration-300">
+                  <Link to={`/chat/${chat.id}`} className="block p-4">
+                    <div className="flex justify-between">
+                      <h1 className="font-semibold">{chat.title}</h1>
+                      <h1 className="text-neutral-400">
+                        {dateFormat(
+                          chat.dateLastModified
+                            ? chat.dateLastModified
+                            : chat.createdDate
+                        )}
+                      </h1>
+                    </div>
+                  </Link>
                 </div>
               ))
             : null}
