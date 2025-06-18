@@ -30,12 +30,9 @@ export const Profile = () => {
     return () => {
       window.removeEventListener("resize", handelChange)
       // return becuase when refersh it will remove..
-      console.log("RETURN")
     };
     // no need to add window.innerWidth because is not a reactive value
   }, []);
-
-  console.log(message);
 
   return (
     <div>
