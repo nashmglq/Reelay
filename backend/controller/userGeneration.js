@@ -7,6 +7,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 const crypto = require("crypto");
+const { platform } = require("os");
 
 const newChat = async (req, res) => {
   try {
@@ -89,7 +90,6 @@ const getDetailChat = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user.id;
-    console.log(id)
     if (!id) return res.status(400).json({ error: "Please provide an ID" });
 
     const getDetail = await prisma.chat.findUnique({
@@ -99,7 +99,8 @@ const getDetailChat = async (req, res) => {
       },
     });
 
-    if(!getDetail) return res.status(400).json({error: "Chat is not found."})
+    if (!getDetail)
+      return res.status(400).json({ error: "Chat is not found." });
 
     return res.status(200).json({ success: getDetail });
   } catch (err) {
@@ -109,11 +110,13 @@ const getDetailChat = async (req, res) => {
 
 const generateImage = async (req, res) => {
   try {
-    const { prompt, uuid } = req.body;
+    const { prompt, uuid, platform } = req.body;
     if (!prompt)
       return res.status(400).json({ error: "Please input your prompt." });
     const randomString = crypto.randomBytes(10).toString("hex").slice(0, 10);
-    const imagePrompt = `Based on the following prompt, generate an image that represents it as accurately as possible:\n\n${prompt}`;
+    const imagePrompt = `Based on the following prompt, generate an image that represents it as accurately as 
+    possible and make it as a thumbnail base on the platform given:\n\n${prompt}
+    \n\n Platform:${platform} `;
 
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash-preview-image-generation",
@@ -184,5 +187,5 @@ module.exports = {
   generateImage,
   generateScript,
   searchChat,
-  getDetailChat
+  getDetailChat,
 };

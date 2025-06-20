@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { getDetailViewStore } from "../stores/authStore";
 import { useParams } from "react-router-dom";
-
+import { FaTiktok, FaYoutube, FaFacebookSquare  } from "react-icons/fa";
 export const DetailChat = () => {
   const { getDetail, loading, success, error, message } = getDetailViewStore();
   const { id } = useParams();
+
+  
 
   useEffect(() => {
     getDetail(id);
@@ -20,7 +22,7 @@ export const DetailChat = () => {
         <h1>
           Platform:{" "}
           {message && success
-            ? message.platform.map((plat) => <h1>{plat === "Tiktok"}</h1>)
+            ? message.platform.map((plat) => <h1>{plat === "Tiktok" ? <FaTiktok/>: null}</h1>)
             : "error"}
         </h1>
 
