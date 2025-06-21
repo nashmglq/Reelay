@@ -1,12 +1,10 @@
 import { useEffect } from "react";
 import { getDetailViewStore } from "../stores/authStore";
 import { useParams } from "react-router-dom";
-import { FaTiktok, FaYoutube, FaFacebookSquare  } from "react-icons/fa";
+import { FaTiktok, FaYoutube, FaFacebookSquare } from "react-icons/fa";
 export const DetailChat = () => {
   const { getDetail, loading, success, error, message } = getDetailViewStore();
   const { id } = useParams();
-
-  
 
   useEffect(() => {
     getDetail(id);
@@ -18,13 +16,25 @@ export const DetailChat = () => {
       {/* Data such as platforms... title... */}
       <div className="shadow-lg w-[30%] h-1/2 p-4 border-2 rounded-lg">
         <h1>Title: {message && success ? message.title : "error"}</h1>
-
-        <h1>
+ <div className="flex">
+        <span>
           Platform:{" "}
           {message && success
-            ? message.platform.map((plat) => <h1>{plat === "Tiktok" ? <FaTiktok/>: null}</h1>)
+            ? message.platform.map((plat) => (
+             
+                              <span>
+                  {plat === "Tiktok" ? (
+                    <FaTiktok />
+                  ) : plat === "Youtube" ? (
+                    <FaYoutube />
+                  ) : plat === "Facebook" ? (
+                    <FaFacebookSquare />
+                  ) : null}
+                </span>
+              ))
             : "error"}
-        </h1>
+        </span>
+        </div>
 
         <div className="flex">
           <h1>

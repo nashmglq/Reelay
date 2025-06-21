@@ -181,6 +181,45 @@ const generateScript = async (req, res) => {
   }
 };
 
+const deleteChat = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const id = use.params();
+
+    if (!id) return res.status.json({ error: "Please provide an ID." });
+
+    const deleteChat = await prisma.chat.delete({
+      where: { userId: userId, id: id },
+    });
+
+    return res.status(200).json({ success: "Successfully deleted chat." });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+const updateChat = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const id = req.params;
+    const { type, platform } = req.body;
+
+    if (!type && !platform) return res.status.json({ error: "Please provide " });
+
+    const updateChat = await prisma.chat.delete({
+      where: { userId: userId, id: id },
+      data: {
+        typeOfChat: type,
+        platform: platform
+      }
+    });
+
+    return res.status(200).json({ success: "Successfully updated chat." });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   newChat,
   getListViewChat,

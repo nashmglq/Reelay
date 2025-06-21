@@ -76,4 +76,5 @@ const getProfile = async (req, res) => {
   }
 };
 
+
 module.exports = { verificationGoogleToken, getProfile };
