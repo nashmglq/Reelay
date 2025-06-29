@@ -108,15 +108,18 @@ const getDetailChat = async (req, res) => {
   }
 };
 
+
 const generateImage = async (req, res) => {
   try {
-    const { prompt, uuid, platform } = req.body;
-    if (!prompt)
-      return res.status(400).json({ error: "Please input your prompt." });
+    const { prompt, uuid, platform, text, position} = req.body;
+    if (!prompt || !uuid || !platform || !text || !position)
+      return res.status(400).json({ error: "Please input all fields." });
     const randomString = crypto.randomBytes(10).toString("hex").slice(0, 10);
     const imagePrompt = `Based on the following prompt, generate an image that represents it as accurately as 
     possible and make it as a thumbnail base on the platform given:\n\n${prompt}
-    \n\n Platform:${platform} `;
+    \n\n Platform:${platform} 
+    \n\n Input the text provided: ${text},
+    \n\n Postion of text: ${position}`;
 
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash-preview-image-generation",
@@ -184,12 +187,12 @@ const generateScript = async (req, res) => {
 const deleteChat = async (req, res) => {
   try {
     const userId = req.user.id;
-    const id = use.params();
+    const {uuid} = req.body;
 
-    if (!id) return res.status.json({ error: "Please provide an ID." });
+    if (!uuid) return res.status.json({ error: "Please provide an ID." });
 
     const deleteChat = await prisma.chat.delete({
-      where: { userId: userId, id: id },
+      where: { userId: userId, id: uuid },
     });
 
     return res.status(200).json({ success: "Successfully deleted chat." });
@@ -201,17 +204,17 @@ const deleteChat = async (req, res) => {
 const updateChat = async (req, res) => {
   try {
     const userId = req.user.id;
-    const id = req.params;
-    const { type, platform } = req.body;
+    const { type, platform, uuid } = req.body;
 
-    if (!type && !platform) return res.status.json({ error: "Please provide " });
+    if (!type && !platform && !uuid)
+      return res.status.json({ error: "Please provide all fields: Type, Platform, ID" });
 
-    const updateChat = await prisma.chat.delete({
-      where: { userId: userId, id: id },
+    const updateChat = await prisma.chat.update({
+      where: { userId: userId, id: uuid },
       data: {
-        typeOfChat: type,
-        platform: platform
-      }
+        typeOfChat: [type],
+        platform: platform,
+      },
     });
 
     return res.status(200).json({ success: "Successfully updated chat." });
@@ -227,4 +230,6 @@ module.exports = {
   generateScript,
   searchChat,
   getDetailChat,
+  deleteChat,
+  updateChat
 };
