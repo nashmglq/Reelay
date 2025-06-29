@@ -8,24 +8,20 @@ export const AddChat = () => {
   const { listView } = listViewOfChatStore();
   const [show, setShow] = useState(false);
   const platforms = ["Tiktok", "Youtube", "Facebook"];
-  const types = ["Script", "Image", "Script & Image"];
+  const types = ["Script", "Image"];
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [title, setTitle] = useState("");
 
   const toggleItem = (item, selectedArray, setSelectedArray) => {
-    // 3 parameters = value(plat), array(selectedPlat), useState(setSelected)
-    // if in the array the item exist, we then filter it out
     if (selectedArray.includes(item))
-      // filter creates a new array that pass the condition...
       setSelectedArray(selectedArray.filter((i) => i != item));
-    // get the array, then add the item, we use spread here to get the raw then add a new one
     else setSelectedArray([...selectedArray, item]);
   };
 
   const showHandler = (e) => {
     e.preventDefault();
-    setShow(show ? false : true);
+    setShow(!show);
   };
 
   const submitHandler = (e) => {
@@ -149,9 +145,7 @@ export const AddChat = () => {
                         type === "Script"
                           ? "bg-black hover:bg-neutral-600 rounded-l-lg"
                           : type === "Image"
-                          ? "bg-gray-900 hover:bg-neutral-600"
-                          : type === "Script & Image"
-                          ? "bg-gray-800 rounded-r-lg hover:bg-neutral-600"
+                          ? "bg-gray-900 hover:bg-neutral-600 rounded-r-lg"
                           : ""
                       }
      ${selectedTypes.includes(type) ? "border-2 border-gray-200" : ""}

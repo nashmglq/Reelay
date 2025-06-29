@@ -9,6 +9,11 @@ export const DetailChat = () => {
   const [inputText, setInputText] = useState("");
   const [generatedScript, setGeneratedScript] = useState("");
 
+  useEffect(() =>{
+    getDetail(id)
+  }, [getDetail])
+  console.log(getDetail)
+
   const handleGenerate = (e) => {
     e.preventDefault();
     setGeneratedScript("Generated script will appear here...");
@@ -112,32 +117,7 @@ export const DetailChat = () => {
         </div>
 
         <div className="bg-white shadow-lg rounded-lg p-6 border">
-          <h2 className="text-xl font-semibold mb-4">Quick Info</h2>
-          
-          <div className="space-y-3">
-            <div className="flex items-center space-x-2">
-              <span>📱</span>
-              <span>Primary Platform: TikTok</span>
-            </div>
-            
-            <div>
-              <span className="font-medium text-gray-700">Content Type:</span>
-              <span className="ml-2 bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
-                Script
-              </span>
-            </div>
-
-            <div className="pt-4 border-t">
-              <h3 className="font-medium text-gray-700 mb-2">Tips:</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Keep scripts engaging and concise</li>
-                <li>• Include strong hooks in the first 3 seconds</li>
-                <li>• Add clear call-to-actions</li>
-              </ul>
-            </div>
           </div>
-        </div>
-
       </div>
     </div>
   );

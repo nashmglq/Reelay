@@ -271,7 +271,113 @@ export const getDetailViewStore = create(
             }
           : null;
 
-        const response = await axios.get(`${baseUrl}/crud-genAi/get-detail-chat/${id}`, config);
+        const response = await axios.get(
+          `${baseUrl}/crud-genAi/get-detail-chat/${id}`,
+          config
+        );
+
+        if (response.data && response.data.success) {
+          set({
+            loading: false,
+            success: true,
+            error: false,
+            message: response.data.success,
+          });
+        }
+      } catch (err) {
+        set({
+          loading: false,
+          success: false,
+          error: true,
+          message:
+            err.response && err.response.data
+              ? err.response.data.error
+              : "Something went wrong.",
+        });
+      }
+    },
+  }))
+);
+
+export const updateChatStore = create(
+  devtools((set) => ({
+    loading: false,
+    success: false,
+    error: false,
+    message: [],
+
+    updateChat: async (formData) => {
+      try {
+        set({ loading: true, success: false, error: false, message: [] });
+
+        const getToken = JSON.parse(localStorage.getItem("userInfo"));
+        const token = getToken ? getToken.token : null;
+        const config = token
+          ? {
+              headers: {
+                Accept: "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          : null;
+
+        const response = await axios.put(
+          `${baseUrl}/crud-genAi/update-chat`,
+          formData,
+          config
+        );
+
+        if (response.data && response.data.success) {
+          set({
+            loading: false,
+            success: true,
+            error: false,
+            message: response.data.success,
+          });
+        }
+      } catch (err) {
+        set({
+          loading: false,
+          success: false,
+          error: true,
+          message:
+            err.response && err.response.data
+              ? err.response.data.error
+              : "Something went wrong.",
+        });
+      }
+    },
+  }))
+);
+
+
+export const deleteChatStore = create(
+  devtools((set) => ({
+    loading: false,
+    success: false,
+    error: false,
+    message: [],
+
+    updateChat: async (formData) => {
+      try {
+        set({ loading: true, success: false, error: false, message: [] });
+
+        const getToken = JSON.parse(localStorage.getItem("userInfo"));
+        const token = getToken ? getToken.token : null;
+        const config = token
+          ? {
+              headers: {
+                Accept: "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          : null;
+
+        const response = await axios.delete(
+          `${baseUrl}/crud-genAi/delete-chat`,
+          formData,
+          config
+        );
 
         if (response.data && response.data.success) {
           set({
