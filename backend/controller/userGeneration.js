@@ -108,10 +108,9 @@ const getDetailChat = async (req, res) => {
   }
 };
 
-
 const generateImage = async (req, res) => {
   try {
-    const { prompt, uuid, platform, text, position} = req.body;
+    const { prompt, uuid, platform, text, position } = req.body;
     if (!prompt || !uuid || !platform || !text || !position)
       return res.status(400).json({ error: "Please input all fields." });
     const randomString = crypto.randomBytes(10).toString("hex").slice(0, 10);
@@ -187,7 +186,7 @@ const generateScript = async (req, res) => {
 const deleteChat = async (req, res) => {
   try {
     const userId = req.user.id;
-    const {uuid} = req.body;
+    const { uuid } = req.body;
 
     if (!uuid) return res.status.json({ error: "Please provide an ID." });
 
@@ -204,16 +203,35 @@ const deleteChat = async (req, res) => {
 const updateChat = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { type, platform, uuid } = req.body;
-
+    const { title, uuid } = req.body;
+    console.log(title, uuid);
     if (!type && !platform && !uuid)
-      return res.status.json({ error: "Please provide all fields: Type, Platform, ID" });
+      return res.status.json({
+        error: "Please provide all fields: Type, Platform, ID",
+      });
+
+    const titleExist = await prisma.chat.findUnique({
+      where: { title: title },
+    });
+
+    if (titleExist === title) {
+      return res
+        .status(200)
+        .json({ success: "No changes detected. Update not required." });
+    }
+
+    if (titleExist) {
+      return res
+        .status(400)
+        .json({
+          error: "Title already exists. Please choose a different one.",
+        });
+    }
 
     const updateChat = await prisma.chat.update({
       where: { userId: userId, id: uuid },
       data: {
-        typeOfChat: [type],
-        platform: platform,
+        title: title,
       },
     });
 
@@ -231,5 +249,5 @@ module.exports = {
   searchChat,
   getDetailChat,
   deleteChat,
-  updateChat
+  updateChat,
 };
