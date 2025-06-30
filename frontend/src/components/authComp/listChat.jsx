@@ -1,5 +1,9 @@
-import { Search } from "lucide-react";
-import { listViewOfChatStore, searchChats } from "../../stores/authStore";
+import { Check, Pencil, PenLine, Search } from "lucide-react";
+import {
+  listViewOfChatStore,
+  searchChats,
+  updateChatStore,
+} from "../../stores/authStore";
 import { useEffect, useState } from "react";
 import { formatDistanceToNowStrict, format } from "date-fns";
 import { Link } from "react-router-dom";
@@ -14,7 +18,17 @@ export const ListChat = () => {
     error: searchError,
     message: searchMessage,
   } = searchChats();
+  const {
+    updateChat,
+    loading: updateLoading,
+    success: updateSuccess,
+    error: updateError,
+  } = updateChatStore();
   const [query, setQuery] = useState("");
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [idUpdate, setIdUpdate] = useState(null);
+  const [updateName, setUpdateName] = useState("");
+  const [checkUpdate, setCheckUpdate] = useState(false);
 
   useEffect(() => {
     listView();
@@ -37,6 +51,13 @@ export const ListChat = () => {
     e.preventDefault();
     const formData = { query };
     queryChat(formData);
+  };
+
+  const submitUpdate = (e) => {
+    e.preventDefault();
+    const formData = { updateName, idUpdate };
+    console.log(formData);
+    if (checkUpdate) updateChat(formData);
   };
 
   return (
@@ -66,13 +87,36 @@ export const ListChat = () => {
                 <div className="border-2 rounded-lg w-full sm:w-[85%] my-2 hover:shadow-lg duration-300">
                   <div className="flex justify-between p-4">
                     <Link to={`/chat/${query.id}`} className="block w-full">
-                      <div>
-                        <h1 className="font-semibold">{query.title}</h1>
-                        <div className="text-neutral-400">
-                          {dateFormat(
-                            query.dateLastModified ?? query.createdDate
-                          )}
-                        </div>
+                      <div className="flex gap-x-2">
+                        {isUpdate && query.id === idUpdate ? (
+                          <input
+                            value={updateName}
+                            className="w-full border-2 border-neutral-900 rounded-lg"
+                            onClick={(e) => {
+                              e.preventDefault();
+                            }}
+                            onChange={(e) => setUpdateName(e.target.value)}
+                          />
+                        ) : (
+                          <h1 className="w-full">{query.title}</h1>
+                        )}
+
+                        <button
+                          className="hover:scale-105 duration-300"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setIsUpdate(!isUpdate);
+                            setIdUpdate(query.id);
+                            submitUpdate(e);
+                          }}
+                        >
+                          {isUpdate ? <Check /> : <Pencil />}
+                        </button>
+                      </div>
+                      <div className="text-neutral-400">
+                        {dateFormat(
+                          query.dateLastModified ?? query.createdDate
+                        )}
                       </div>
                     </Link>
 
@@ -85,13 +129,43 @@ export const ListChat = () => {
                 <div className="border-2 rounded-lg w-full sm:w-[85%] my-2 hover:shadow-lg duration-300">
                   <div className="flex justify-between p-4">
                     <Link to={`/chat/${chat.id}`} className="block w-full">
-                      <div>
-                        <h1 className="font-semibold">{chat.title}</h1>
-                        <div className="text-neutral-400">
-                          {dateFormat(
-                            chat.dateLastModified ?? chat.createdDate
+                      <div className="flex gap-x-2">
+                        {isUpdate && chat.id === idUpdate ? (
+                          <input
+                            value={updateName}
+                            className="w-full border-2 border-neutral-900 rounded-lg"
+                            onChange={(e) => {
+                              setUpdateName(e.target.value);
+                              setCheckUpdate(true);
+                            }}
+                            onClick={(e) => {
+                              e.preventDefault();
+                            }}
+                          />
+                        ) : (
+                          <h1 className="w-full">{chat.title}</h1>
+                        )}
+
+                        <button
+                          className="hover:scale-105 duration-300"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setIsUpdate(!isUpdate);
+                            setIdUpdate(chat.id);
+                            setUpdateName(chat.title);
+                            const formData = { title: updateName, uuid: idUpdate };
+                            if (checkUpdate) updateChat(formData);
+                          }}
+                        >
+                          {isUpdate && chat.id === idUpdate ? (
+                            <Check />
+                          ) : (
+                            <Pencil />
                           )}
-                        </div>
+                        </button>
+                      </div>
+                      <div className="text-neutral-400">
+                        {dateFormat(chat.dateLastModified ?? chat.createdDate)}
                       </div>
                     </Link>
 

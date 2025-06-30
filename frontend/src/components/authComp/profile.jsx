@@ -34,7 +34,7 @@ export const Profile = () => {
     // no need to add window.innerWidth because is not a reactive value
   }, []);
 
-  console.log(message)
+  // console.log(message)
   return (
     <div>
       <button onClick={showHandler} className="sm:hidden">

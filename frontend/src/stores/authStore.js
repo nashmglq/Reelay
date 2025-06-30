@@ -308,6 +308,7 @@ export const updateChatStore = create(
 
     updateChat: async (formData) => {
       try {
+        console.log(formData)
         set({ loading: true, success: false, error: false, message: [] });
 
         const getToken = JSON.parse(localStorage.getItem("userInfo"));

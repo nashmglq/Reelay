@@ -1,12 +1,11 @@
 import { EllipsisVertical } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
-import { UpdateChat } from "./updateChat";
+
 import { DeleteChat } from "./deleteChat";
 export const OverFlow = () => {
   const [dropDown, setDropDown] = useState(false);
   const inside = useRef(null);
   // mousedown means click
-
   // Handles outside click (close)
   // useEffect runs once added the eventListenre and return will only happnd when
   // useEffect was called again (unmounts, or remvoed)
@@ -41,7 +40,6 @@ export const OverFlow = () => {
           ref={inside}
             onClick={(e) => e.stopPropagation()}
         >
-          <UpdateChat />
           <DeleteChat />
         </div>
       ) : null}
