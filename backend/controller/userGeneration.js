@@ -50,9 +50,6 @@ const getListViewChat = async (req, res) => {
     if (fetchChat[0].userId != id)
       return res.status(400).json({ error: "You are not authenticated" });
 
-    // console.log(fetchChat.length === 0 , !fetchChat.length)
-    // "!" turn value opposite, so 0 will be true
-
     if (fetchChat.length === 0)
       return res.status(400).json({ success: "No chats yet." });
 
@@ -205,13 +202,14 @@ const updateChat = async (req, res) => {
     const userId = req.user.id;
     const { title, uuid } = req.body;
     console.log(title, uuid);
-    if (!type && !platform && !uuid)
+
+    if (!title && !uuid)
       return res.status.json({
-        error: "Please provide all fields: Type, Platform, ID",
+        error: "Please provide all fields: title, ID",
       });
 
     const titleExist = await prisma.chat.findUnique({
-      where: { title: title },
+      where: { title: title, userId: userId },
     });
 
     if (titleExist === title) {
@@ -221,11 +219,9 @@ const updateChat = async (req, res) => {
     }
 
     if (titleExist) {
-      return res
-        .status(400)
-        .json({
-          error: "Title already exists. Please choose a different one.",
-        });
+      return res.status(400).json({
+        error: "Title already exists. Please choose a different one.",
+      });
     }
 
     const updateChat = await prisma.chat.update({
