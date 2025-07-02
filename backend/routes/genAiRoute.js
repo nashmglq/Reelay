@@ -9,6 +9,6 @@ route.post("/gen-image", authCheck, generateImage)
 route.post("/gen-script", authCheck, generateScript)
 route.post("/search-chat", authCheck, searchChat)
 route.get("/get-detail-chat/:id", authCheck, getDetailChat)
-route.delete("/delete-chat", authCheck, deleteChat)
+route.delete("/delete-chat/:uuid", authCheck, deleteChat)
 route.put("/update-chat", authCheck, updateChat)
 module.exports = route

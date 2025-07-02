@@ -46,6 +46,9 @@ const getListViewChat = async (req, res) => {
     const id = req.user.id;
     const fetchChat = await prisma.chat.findMany({
       where: { userId: id },
+      orderBy: {
+        createdAt: "desc"
+      }
     });
     if (fetchChat[0].userId != id)
       return res.status(400).json({ error: "You are not authenticated" });
@@ -183,8 +186,8 @@ const generateScript = async (req, res) => {
 const deleteChat = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { uuid } = req.body;
-
+    const {uuid} = req.params;
+    console.log(uuid)
     if (!uuid) return res.status.json({ error: "Please provide an ID." });
 
     const deleteChat = await prisma.chat.delete({
