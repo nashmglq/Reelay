@@ -308,7 +308,7 @@ export const updateChatStore = create(
 
     updateChat: async (formData) => {
       try {
-        console.log(formData)
+        console.log(formData);
         set({ loading: true, success: false, error: false, message: [] });
 
         const getToken = JSON.parse(localStorage.getItem("userInfo"));
@@ -336,6 +336,11 @@ export const updateChatStore = create(
             message: response.data.success,
           });
         }
+        const { listView } = listViewOfChatStore.getState();
+        listView();
+
+        const { queryChat } = searchChats.getState();
+        queryChat();
       } catch (err) {
         set({
           loading: false,
@@ -351,7 +356,6 @@ export const updateChatStore = create(
   }))
 );
 
-
 export const deleteChatStore = create(
   devtools((set) => ({
     loading: false,
@@ -359,7 +363,7 @@ export const deleteChatStore = create(
     error: false,
     message: [],
 
-    updateChat: async (formData) => {
+    deleteChat: async (uuid) => {
       try {
         set({ loading: true, success: false, error: false, message: [] });
 
@@ -375,8 +379,7 @@ export const deleteChatStore = create(
           : null;
 
         const response = await axios.delete(
-          `${baseUrl}/crud-genAi/delete-chat`,
-          formData,
+          `${baseUrl}/crud-genAi/delete-chat/${uuid}`,
           config
         );
 
@@ -388,6 +391,12 @@ export const deleteChatStore = create(
             message: response.data.success,
           });
         }
+
+        const { listView } = listViewOfChatStore.getState();
+        listView();
+
+        const { queryChat } = searchChats.getState();
+        queryChat();
       } catch (err) {
         set({
           loading: false,

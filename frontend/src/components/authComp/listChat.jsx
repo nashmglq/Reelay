@@ -4,7 +4,7 @@ import {
   searchChats,
   updateChatStore,
 } from "../../stores/authStore";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { formatDistanceToNowStrict, format } from "date-fns";
 import { Link } from "react-router-dom";
 import { OverFlow } from "./overflow";
@@ -29,6 +29,8 @@ export const ListChat = () => {
   const [idUpdate, setIdUpdate] = useState(null);
   const [updateName, setUpdateName] = useState("");
   const [checkUpdate, setCheckUpdate] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isIdHover, setIsIdHover] = useState(false);
 
   useEffect(() => {
     listView();
@@ -38,9 +40,7 @@ export const ListChat = () => {
     if (!data) return "";
     const createdDate = new Date(data);
     const now = new Date();
-    // make it as ms
     const diffTime = Math.abs(now.getTime() - createdDate.getTime());
-    // convert into days
     const diffDay = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDay > 7) return format(createdDate, "MMM dd, yyyy");
@@ -55,7 +55,7 @@ export const ListChat = () => {
 
   const submitUpdate = (e) => {
     e.preventDefault();
-    const formData = { updateName, idUpdate };
+    const formData = { title: updateName, uuid: idUpdate };
     console.log(formData);
     if (checkUpdate) updateChat(formData);
   };
@@ -77,17 +77,23 @@ export const ListChat = () => {
           </button>
         </form>
 
-        {/* <div className="w-full px-20">
-            {searchSuccess && query ? (<h1>Result based on your search...</h1>) : null}
-      </div> */}
-
         <div className="flex items-center flex-col min-h-[500px] w-full">
           {searchSuccess && searchMessage
             ? searchMessage.map((query) => (
                 <div className="border-2 rounded-lg w-full sm:w-[85%] my-2 hover:shadow-lg duration-300">
                   <div className="flex justify-between p-4">
                     <Link to={`/chat/${query.id}`} className="block w-full">
-                      <div className="flex gap-x-2">
+                      <div
+                        className="flex gap-x-2"
+                        onMouseEnter={() => {
+                          setIsHovered(true);
+                          setIsIdHover(query.id);
+                        }}
+                        onMouseLeave={() => {
+                          setIsHovered(false);
+                          setIsIdHover(null);
+                        }}
+                      >
                         {isUpdate && query.id === idUpdate ? (
                           <input
                             value={updateName}
@@ -110,7 +116,11 @@ export const ListChat = () => {
                             submitUpdate(e);
                           }}
                         >
-                          {isUpdate ? <Check /> : <Pencil />}
+                          {isUpdate && query.id === idUpdate ? (
+                            <Check />
+                          ) : isHovered && query.id === isIdHover ? (
+                            <Pencil />
+                          ) : null}
                         </button>
                       </div>
                       <div className="text-neutral-400">
@@ -120,16 +130,29 @@ export const ListChat = () => {
                       </div>
                     </Link>
 
-                    <OverFlow />
+                    <OverFlow uuid={query.id} />
                   </div>
                 </div>
               ))
             : success && message
             ? message.map((chat, index) => (
-                <div className="border-2 rounded-lg w-full sm:w-[85%] my-2 hover:shadow-lg duration-300">
+                <div
+                  className="border-2 rounded-lg w-full sm:w-[85%] my-2 hover:shadow-lg duration-300"
+                  key={index}
+                >
                   <div className="flex justify-between p-4">
                     <Link to={`/chat/${chat.id}`} className="block w-full">
-                      <div className="flex gap-x-2">
+                      <div
+                        className="flex gap-x-2"
+                        onMouseEnter={() => {
+                          setIsHovered(true);
+                          setIsIdHover(chat.id);
+                        }}
+                        onMouseLeave={() => {
+                          setIsHovered(false);
+                          setIsIdHover(null);
+                        }}
+                      >
                         {isUpdate && chat.id === idUpdate ? (
                           <input
                             value={updateName}
@@ -153,15 +176,14 @@ export const ListChat = () => {
                             setIsUpdate(!isUpdate);
                             setIdUpdate(chat.id);
                             setUpdateName(chat.title);
-                            const formData = { title: updateName, uuid: idUpdate };
-                            if (checkUpdate) updateChat(formData);
+                            submitUpdate(e);
                           }}
                         >
                           {isUpdate && chat.id === idUpdate ? (
                             <Check />
-                          ) : (
+                          ) : isHovered && chat.id === isIdHover ? (
                             <Pencil />
-                          )}
+                          ) : null}
                         </button>
                       </div>
                       <div className="text-neutral-400">
@@ -169,7 +191,7 @@ export const ListChat = () => {
                       </div>
                     </Link>
 
-                    <OverFlow />
+                    <OverFlow uuid={chat.id} />
                   </div>
                 </div>
               ))

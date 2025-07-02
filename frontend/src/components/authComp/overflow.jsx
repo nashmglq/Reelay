@@ -2,7 +2,7 @@ import { EllipsisVertical } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 
 import { DeleteChat } from "./deleteChat";
-export const OverFlow = () => {
+export const OverFlow = ({ uuid }) => {
   const [dropDown, setDropDown] = useState(false);
   const inside = useRef(null);
   // mousedown means click
@@ -38,9 +38,9 @@ export const OverFlow = () => {
         <div
           className="absolute bg-white border-2 rounded-lg shadow-lg flex flex-col"
           ref={inside}
-            onClick={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
         >
-          <DeleteChat />
+          <DeleteChat uuid={uuid} />
         </div>
       ) : null}
     </div>
