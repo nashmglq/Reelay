@@ -47,8 +47,8 @@ const getListViewChat = async (req, res) => {
     const fetchChat = await prisma.chat.findMany({
       where: { userId: id },
       orderBy: {
-        createdAt: "desc"
-      }
+        createdAt: "desc",
+      },
     });
     if (fetchChat[0].userId != id)
       return res.status(400).json({ error: "You are not authenticated" });
@@ -156,16 +156,16 @@ const generateScript = async (req, res) => {
   try {
     const { prompt, platform, uuid } = req.body;
     const id = req.user.id;
-    // if not user dont show
 
     if (!prompt || !platform || !uuid)
       return res
         .status(400)
         .json({ error: "Please input all the required fields." });
+    const promptMessage = `Write a full entertainment script in plain text for the platform "${platform}" based on this idea:
 
-    const promptMessage = `Please write a complete script for the platform "${platform}" based on the following idea:
-    \n\n ${prompt}
-    \n\n Only return the script. Do not include any additional messages.`;
+"${prompt}"
+
+Do not return any code or technical script. Only return the written script as if it's for a scene or skit. No extra explanations.`;
 
     const result = await model.generateContent(promptMessage);
 
@@ -183,11 +183,37 @@ const generateScript = async (req, res) => {
   }
 };
 
+
+
+const historyChat = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.params;
+
+    const checkAuthorization = await prisma.chat.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (checkAuthorization.userId !== userId)
+      return res.status(400).json({ error: "You are not authenticated." });
+
+    const getAllPrevChat = await prisma.genText.findFirstOrThrow({
+      where: { chatId: id },
+    });
+
+    return res.status(200).json({ success: getAllPrevChat });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
 const deleteChat = async (req, res) => {
   try {
     const userId = req.user.id;
-    const {uuid} = req.params;
-    console.log(uuid)
+    const { uuid } = req.params;
+    console.log(uuid);
     if (!uuid) return res.status.json({ error: "Please provide an ID." });
 
     const deleteChat = await prisma.chat.delete({
@@ -249,4 +275,5 @@ module.exports = {
   getDetailChat,
   deleteChat,
   updateChat,
+  historyChat,
 };
