@@ -6,7 +6,8 @@ const cors = require("cors");
 const path = require("path");
 const authRoute = require("./routes/authRoute")
 const genAiRoute = require("./routes/genAiRoute")
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Static to get all locally such as the image
+app.use("/genImage", express.static(path.join(__dirname, "genImage")));
 app.use(cors());
 app.use(express.json());
 app.use("/auth", authRoute)

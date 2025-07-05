@@ -118,18 +118,23 @@ const getDetailChat = async (req, res) => {
 const generateImage = async (req, res) => {
   try {
     const { prompt, uuid, platform, text, position, allowed } = req.body;
+    const userId = req.user.id;
 
-    if (!allowed) return res.status(400).json({error: "Image generation in this chat is not available."})
+    if (!allowed)
+      return res
+        .status(400)
+        .json({ error: "Image generation in this chat is not available." });
 
     if (!prompt || !uuid || !platform || !text || !position)
       return res.status(400).json({ error: "Please input all fields." });
 
     const randomString = crypto.randomBytes(10).toString("hex").slice(0, 10);
     const imagePrompt = `Based on the following prompt, generate an image that represents it as accurately as 
-    possible and make it as a thumbnail base on the platform given:\n\n${prompt}
-    \n\n Platform:${platform} 
-    \n\n Input the text provided: ${text},
-    \n\n Postion of text: ${position}`;
+possible and make it as a thumbnail based on the platform given:\n\n${prompt}
+\n\nPlatform: ${platform} 
+\n\nInput the text provided: ${text}
+\n\nPosition of text: ${position}
+\n\nDo NOT include the platform's logo in the image.`;
 
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash-preview-image-generation",
@@ -151,6 +156,7 @@ const generateImage = async (req, res) => {
           data: {
             thumbnailImage: fileName,
             chatId: uuid,
+            userId: userId,
           },
         });
         return res.status(200).json({ success: `${fileName}` });
@@ -163,17 +169,39 @@ const generateImage = async (req, res) => {
   }
 };
 
+const historyImage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    if (!id) return res.status(400).json({ error: "No id found" });
+
+    const getImages = await prisma.genImage.findMany({
+      where: { userId, chatId: id },
+    });
+
+    if (!getImages)
+      return res.status(400).json({ error: "No image history yet." });
+
+    return res.status(200).json({ success: getImages });
+  } catch (err) {
+    return res.status(500).json({
+      error: err.message,
+    });
+  }
+};
+
 const generateScript = async (req, res) => {
   try {
     const { prompt, platform, uuid, scriptType } = req.body;
-    const id = req.user.id;
+    const userId = req.user.id;
 
     if (!prompt || !platform || !uuid)
       return res
         .status(400)
         .json({ error: "Please input all the required fields." });
 
-      const promptMessage = `Based on the script type "${scriptType}", follow the correct format:
+    const promptMessage = `Based on the script type "${scriptType}", follow the correct format:
 
       - If the script type sounds like a play, act, skit, or scene: write it as a character-based script with dialogue and stage directions.
       - Otherwise, write it as a narrator-only script in a storytelling or explanatory format. Do NOT use characters or dialogue in this case.
@@ -186,7 +214,6 @@ const generateScript = async (req, res) => {
 
       Return only the script. No comments, code, or extra formatting.`;
 
-
     const result = await model.generateContent(promptMessage);
 
     const saveResult = await prisma.genText.create({
@@ -194,6 +221,7 @@ const generateScript = async (req, res) => {
         prompt,
         content: result.response.text(),
         chatId: uuid,
+        userId: userId,
       },
     });
 
@@ -208,23 +236,18 @@ const historyChat = async (req, res) => {
     const userId = req.user.id;
     const { id } = req.params;
 
-    const checkAuthorization = await prisma.chat.findUnique({
-      where: {
-        id: id,
-      },
+    const chat = await prisma.chat.findUnique({
+      where: { id },
+      include: { genText: true },
     });
 
-    if (!checkAuthorization) {
+    if (!chat)
       return res.status(400).json({ error: "No chat history available" });
-    }
-    if (checkAuthorization.userId !== userId)
-      return res.status(400).json({ error: "You are not authenticated." });
 
-    const getAllPrevChat = await prisma.genText.findMany({
-      where: { chatId: id },
-    });
+    if (chat.userId !== userId)
+      return res.status(403).json({ error: "You are not authenticated." });
 
-    return res.status(200).json({ success: getAllPrevChat });
+    return res.status(200).json({ success: chat.genText });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -297,4 +320,5 @@ module.exports = {
   deleteChat,
   updateChat,
   historyChat,
+  historyImage,
 };

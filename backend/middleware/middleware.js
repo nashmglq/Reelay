@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-
+const multer = require("multer");
 const authCheck = (req, res, next) => {
   try {
     const token = req.header("Authorization")?.split(" ")[1];
@@ -17,4 +17,18 @@ const authCheck = (req, res, next) => {
   }
 };
 
-module.exports = { authCheck };
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+
+  // use +, because using "," will just make it skip
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage });
+
+
+module.exports = { authCheck, upload };

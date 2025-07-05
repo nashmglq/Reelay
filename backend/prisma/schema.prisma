@@ -8,12 +8,14 @@ datasource db {
 }
 
 model User {
-  id         Int     @id @unique @default(autoincrement())
-  name       String  @db.VarChar(60)
-  email      String  @unique @db.VarChar(60)
-  googleId   String  @unique @db.VarChar(255)
+  id         Int        @id @unique @default(autoincrement())
+  name       String     @db.VarChar(60)
+  email      String     @unique @db.VarChar(60)
+  googleId   String     @unique @db.VarChar(255)
   profilePic String?
   chat       Chat[]
+  genText    GenText[]
+  genImage   GenImage[]
 
   @@map("user")
 }
@@ -42,6 +44,8 @@ model GenText {
   content String @db.VarChar(15000)
   chatId  String
   chat_id Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  userId  Int
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("genText")
 }
@@ -51,6 +55,8 @@ model GenImage {
   thumbnailImage String?
   chatId         String
   chat_id        Chat    @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  userId         Int
+  user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("gen_image")
+  @@map("genImage")
 }
