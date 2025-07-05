@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { X, Plus, Loader, DiscAlbum } from "lucide-react";
+import { X, Plus, Loader } from "lucide-react";
 import { listViewOfChatStore, newChatStore } from "../../stores/authStore";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 export const AddChat = () => {
   const { newChat, loading, success, error, message } = newChatStore();
   const { listView } = listViewOfChatStore();
@@ -12,6 +13,7 @@ export const AddChat = () => {
   const [selectedPlatforms, setSelectedPlatforms] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [title, setTitle] = useState("");
+  const [scriptType, setScriptType] = useState("");
 
   const toggleItem = (item, selectedArray, setSelectedArray) => {
     if (selectedArray.includes(item))
@@ -26,7 +28,7 @@ export const AddChat = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    const formData = { title, selectedPlatforms, selectedTypes };
+    const formData = { title, selectedPlatforms, selectedTypes, scriptType };
     newChat(formData);
   };
 
@@ -116,10 +118,8 @@ export const AddChat = () => {
                           ? "border-2 border-neutral-200"
                           : ""
                       }
-                      
                       `}
                     onClick={(e) => {
-                      // add a function, because if we dont the toggleItem will be called as soon as this loads.
                       e.preventDefault();
                       toggleItem(
                         platform,
@@ -140,7 +140,6 @@ export const AddChat = () => {
                     key={index}
                     className={`
                       w-full px-2 py-1 text-white transition-colors duration-300 my-2
-                      
                       ${
                         type === "Script"
                           ? "bg-black hover:bg-neutral-600 rounded-l-lg"
@@ -148,8 +147,11 @@ export const AddChat = () => {
                           ? "bg-gray-900 hover:bg-neutral-600 rounded-r-lg"
                           : ""
                       }
-     ${selectedTypes.includes(type) ? "border-2 border-gray-200" : ""}
-
+                      ${
+                        selectedTypes.includes(type)
+                          ? "border-2 border-gray-200"
+                          : ""
+                      }
                       `}
                     onClick={(e) => {
                       e.preventDefault();
@@ -160,6 +162,15 @@ export const AddChat = () => {
                   </button>
                 ))}
               </div>
+
+              <label>Script Type</label>
+              <input
+                className="border-2 border-neutral-800 rounded-lg p-2 my-2"
+                onChange={(e) => setScriptType(e.target.value)}
+                value={scriptType}
+                required
+                placeholder="e.g., act, informational"
+              />
 
               <button
                 className={`flex justify-center items-center w-full bg-black my-2 text-white rounded-lg p-2 hover:bg-gray-900 duration-300

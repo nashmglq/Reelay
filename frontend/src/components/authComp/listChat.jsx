@@ -28,13 +28,22 @@ export const ListChat = () => {
   const [isUpdate, setIsUpdate] = useState(false);
   const [idUpdate, setIdUpdate] = useState(null);
   const [updateName, setUpdateName] = useState("");
+  const [originalName, setOriginalName] = useState("");
   const [checkUpdate, setCheckUpdate] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isIdHover, setIsIdHover] = useState(false);
+  const [isSearched, setIsSearched] = useState(false);
 
   useEffect(() => {
     listView();
   }, [listView]);
+
+  useEffect(() => {
+    if (updateSuccess) {
+      setQuery("");
+      setIsSearched(false);
+    }
+  }, [updateSuccess]);
 
   const dateFormat = (data) => {
     if (!data) return "";
@@ -42,7 +51,6 @@ export const ListChat = () => {
     const now = new Date();
     const diffTime = Math.abs(now.getTime() - createdDate.getTime());
     const diffDay = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
     if (diffDay > 7) return format(createdDate, "MMM dd, yyyy");
     else return formatDistanceToNowStrict(createdDate, { addSuffix: true });
   };
@@ -53,11 +61,25 @@ export const ListChat = () => {
     queryChat(formData);
   };
 
+  useEffect(() => {
+    if (searchMessage && searchSuccess) {
+      setIsSearched(true);
+    } else {
+      setIsSearched(false);
+    }
+  }, [searchMessage, searchSuccess, searchError]);
+
   const submitUpdate = (e) => {
     e.preventDefault();
     const formData = { title: updateName, uuid: idUpdate };
-    console.log(formData);
-    if (checkUpdate) updateChat(formData);
+    if (checkUpdate) {
+      updateChat(formData);
+    }
+    setIsUpdate(false);
+    setIdUpdate(null);
+    setUpdateName("");
+    setOriginalName("");
+    setCheckUpdate(false);
   };
 
   return (
@@ -70,12 +92,19 @@ export const ListChat = () => {
           <input
             className="border-2 rounded-lg w-[80%] p-2"
             placeholder="Search chat..."
+            value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
           <button className="text-white bg-black border-2 rounded-lg px-4">
             <Search />
           </button>
         </form>
+
+        {isSearched && (
+          <div className="mt-4 text-sm text-neutral-600">
+            Showing search results
+          </div>
+        )}
 
         <div className="flex items-center flex-col min-h-[500px] w-full">
           {searchSuccess && searchMessage
@@ -101,7 +130,11 @@ export const ListChat = () => {
                             onClick={(e) => {
                               e.preventDefault();
                             }}
-                            onChange={(e) => setUpdateName(e.target.value)}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              setUpdateName(value);
+                              setCheckUpdate(value !== originalName);
+                            }}
                           />
                         ) : (
                           <h1 className="w-full">{query.title}</h1>
@@ -111,9 +144,15 @@ export const ListChat = () => {
                           className="hover:scale-105 duration-300"
                           onClick={(e) => {
                             e.preventDefault();
-                            setIsUpdate(!isUpdate);
-                            setIdUpdate(query.id);
-                            submitUpdate(e);
+                            if (isUpdate && query.id === idUpdate) {
+                              submitUpdate(e);
+                            } else {
+                              setIsUpdate(true);
+                              setIdUpdate(query.id);
+                              setUpdateName(query.title);
+                              setOriginalName(query.title);
+                              setCheckUpdate(false);
+                            }
                           }}
                         >
                           {isUpdate && query.id === idUpdate ? (
@@ -158,8 +197,9 @@ export const ListChat = () => {
                             value={updateName}
                             className="w-full border-2 border-neutral-900 rounded-lg"
                             onChange={(e) => {
-                              setUpdateName(e.target.value);
-                              setCheckUpdate(true);
+                              const value = e.target.value;
+                              setUpdateName(value);
+                              setCheckUpdate(value !== originalName);
                             }}
                             onClick={(e) => {
                               e.preventDefault();
@@ -173,10 +213,15 @@ export const ListChat = () => {
                           className="hover:scale-105 duration-300"
                           onClick={(e) => {
                             e.preventDefault();
-                            setIsUpdate(!isUpdate);
-                            setIdUpdate(chat.id);
-                            setUpdateName(chat.title);
-                            submitUpdate(e);
+                            if (isUpdate && chat.id === idUpdate) {
+                              submitUpdate(e);
+                            } else {
+                              setIsUpdate(true);
+                              setIdUpdate(chat.id);
+                              setUpdateName(chat.title);
+                              setOriginalName(chat.title);
+                              setCheckUpdate(false);
+                            }
                           }}
                         >
                           {isUpdate && chat.id === idUpdate ? (
