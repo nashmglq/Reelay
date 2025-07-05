@@ -117,23 +117,25 @@ const getDetailChat = async (req, res) => {
 
 const generateImage = async (req, res) => {
   try {
-    const { prompt, uuid, platform, text, position, allowed } = req.body;
+    const { prompt, uuid, text, position, allowed, oriented } = req.body;
     const userId = req.user.id;
+
+      console.log(prompt,uuid, text,position,allowed,oriented)
 
     if (!allowed)
       return res
         .status(400)
         .json({ error: "Image generation in this chat is not available." });
 
-    if (!prompt || !uuid || !platform || !text || !position)
+    if (!prompt || !uuid || !oriented)
       return res.status(400).json({ error: "Please input all fields." });
 
     const randomString = crypto.randomBytes(10).toString("hex").slice(0, 10);
     const imagePrompt = `Based on the following prompt, generate an image that represents it as accurately as 
 possible and make it as a thumbnail based on the platform given:\n\n${prompt}
-\n\nPlatform: ${platform} 
-\n\nInput the text provided: ${text}
-\n\nPosition of text: ${position}
+\n\nInput the text provided: ${text ? text : "NONE"}
+\n\nPosition of text: ${position && text ? position : text && !position ? "AI WILL PICK" : "NONE"}
+\n\n Image Orientation : ${oriented}
 \n\nDo NOT include the platform's logo in the image.`;
 
     const response = await ai.models.generateContent({
@@ -159,7 +161,7 @@ possible and make it as a thumbnail based on the platform given:\n\n${prompt}
             userId: userId,
           },
         });
-        return res.status(200).json({ success: `${fileName}` });
+        return res.status(200).json({ success:  `${fileName}` });
       }
     }
   } catch (err) {
