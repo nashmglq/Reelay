@@ -4,6 +4,7 @@ import { LandingPage } from "./screen/landingPage";
 import { Home } from "./screen/home";
 import { ProtectedRoute } from "./utils/protectedRoute";
 import { DetailChat } from "./screen/detailChat";
+import { ImageScreen } from "./screen/imageScreen";
 
 function App() {
   const clientId = process.env.REACT_APP_CLIENT_ID;
@@ -35,6 +36,15 @@ function App() {
               element={
                 <ProtectedRoute>
                   <DetailChat />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/chat/image/:id"
+              element={
+                <ProtectedRoute>
+                  <ImageScreen />
                 </ProtectedRoute>
               }
             />

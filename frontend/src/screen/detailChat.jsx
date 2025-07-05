@@ -3,7 +3,7 @@ import { getDetailViewStore } from "../stores/authStore";
 import { useParams } from "react-router-dom";
 import { generateScriptStore, historyChatStore } from "../stores/aiStore";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 const formatText = (text) => {
   if (!text || typeof text !== "string") return "";
 
@@ -36,6 +36,7 @@ export const DetailChat = () => {
   const [inputText, setInputText] = useState("");
   const [generatedScript, setGeneratedScript] = useState("");
   const [selectedChat, setSelectedChat] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getDetail(id);
@@ -71,6 +72,14 @@ export const DetailChat = () => {
   const truncateText = (text, maxLength = 50) => {
     if (!text || text.length <= maxLength) return text;
     return text.substring(0, maxLength) + "...";
+  };
+
+  const handleGoToImage = () => {
+    navigate(`/chat/image/${id}`, {
+      state: {
+        allowValue: true
+      },
+    });
   };
 
   if (loading) {
@@ -220,24 +229,25 @@ export const DetailChat = () => {
         </div>
       </div>
 
-      <Link>
+      {message?.typeOfChat?.includes("Image") && (
         <button
+          onClick={handleGoToImage}
           className="right-2 bottom-2 
-        sm:right-10 sm:bottom-10
-        p-3
-        sm:p-4
-        fixed
-        border-2 rounded-full
-        hover:scale-110 duration-300
-        font-bold
-        bg-black
-        text-white
-        lg:text-lg
-        hover:bg-gray-800 transform hover:scale-105 transition-all duration-200"
+      sm:right-10 sm:bottom-10
+      p-3
+      sm:p-4
+      fixed
+      border-2 rounded-full
+      hover:scale-110 duration-300
+      font-bold
+      bg-black
+      text-white
+      lg:text-lg
+      hover:bg-gray-800 transform hover:scale-105 transition-all duration-200"
         >
           Image Generator
         </button>
-      </Link>
+      )}
     </div>
   );
 };
