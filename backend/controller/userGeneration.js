@@ -7,15 +7,21 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 const crypto = require("crypto");
-const { platform } = require("os");
 
 const newChat = async (req, res) => {
   try {
-    const { title, selectedPlatforms, selectedTypes } = req.body;
+    const { title, selectedPlatforms, selectedTypes, scriptType } = req.body;
     const id = req.user.id;
 
-    if (!title || selectedPlatforms.length === 0 || selectedTypes.length === 0)
-      return res.status(400).json({ error: "Please insert all fields" });
+    if (
+      !title ||
+      selectedPlatforms.length === 0 ||
+      selectedTypes.length === 0 ||
+      !scriptType
+    )
+      return res
+        .status(400)
+        .json({ error: "Please insert all fields including script type" });
 
     const queryTitle = await prisma.chat.findFirst({
       where: { title, userId: id },
@@ -26,12 +32,13 @@ const newChat = async (req, res) => {
 
     const createNewChat = await prisma.chat.create({
       data: {
-        title: title,
+        title,
         createdAt: new Date(),
         dateLastModified: new Date(),
         platform: selectedPlatforms,
         userId: id,
         typeOfChat: selectedTypes,
+        scriptType,
       },
     });
 
@@ -154,18 +161,27 @@ const generateImage = async (req, res) => {
 
 const generateScript = async (req, res) => {
   try {
-    const { prompt, platform, uuid } = req.body;
+    const { prompt, platform, uuid, scriptType } = req.body;
     const id = req.user.id;
 
     if (!prompt || !platform || !uuid)
       return res
         .status(400)
         .json({ error: "Please input all the required fields." });
-    const promptMessage = `Write a full entertainment script in plain text for the platform "${platform}" based on this idea:
 
-"${prompt}"
+      const promptMessage = `Based on the script type "${scriptType}", follow the correct format:
 
-Do not return any code or technical script. Only return the written script as if it's for a scene or skit. No extra explanations.`;
+      - If the script type sounds like a play, act, skit, or scene: write it as a character-based script with dialogue and stage directions.
+      - Otherwise, write it as a narrator-only script in a storytelling or explanatory format. Do NOT use characters or dialogue in this case.
+
+      The platform is "${platform}".
+
+      Here is the idea:
+
+      "${prompt}"
+
+      Return only the script. No comments, code, or extra formatting.`;
+
 
     const result = await model.generateContent(promptMessage);
 
@@ -183,8 +199,6 @@ Do not return any code or technical script. Only return the written script as if
   }
 };
 
-
-
 const historyChat = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -196,10 +210,13 @@ const historyChat = async (req, res) => {
       },
     });
 
+    if (!checkAuthorization) {
+      return res.status(400).json({ error: "No chat history available" });
+    }
     if (checkAuthorization.userId !== userId)
       return res.status(400).json({ error: "You are not authenticated." });
 
-    const getAllPrevChat = await prisma.genText.findFirstOrThrow({
+    const getAllPrevChat = await prisma.genText.findMany({
       where: { chatId: id },
     });
 
