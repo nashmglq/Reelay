@@ -117,9 +117,13 @@ const getDetailChat = async (req, res) => {
 
 const generateImage = async (req, res) => {
   try {
-    const { prompt, uuid, platform, text, position } = req.body;
+    const { prompt, uuid, platform, text, position, allowed } = req.body;
+
+    if (!allowed) return res.status(400).json({error: "Image generation in this chat is not available."})
+
     if (!prompt || !uuid || !platform || !text || !position)
       return res.status(400).json({ error: "Please input all fields." });
+
     const randomString = crypto.randomBytes(10).toString("hex").slice(0, 10);
     const imagePrompt = `Based on the following prompt, generate an image that represents it as accurately as 
     possible and make it as a thumbnail base on the platform given:\n\n${prompt}

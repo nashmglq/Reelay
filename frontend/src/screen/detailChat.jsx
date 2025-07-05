@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getDetailViewStore } from "../stores/authStore";
 import { useParams } from "react-router-dom";
 import { generateScriptStore, historyChatStore } from "../stores/aiStore";
+import { Link } from "react-router-dom";
 
 const formatText = (text) => {
   if (!text || typeof text !== "string") return "";
@@ -59,10 +60,7 @@ export const DetailChat = () => {
       scriptType: message.scriptType,
     };
     generateScript(formData);
-    
   };
-
-
 
   const handleChatClick = (chat) => {
     setSelectedChat(chat);
@@ -92,7 +90,7 @@ export const DetailChat = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="container mx-auto px-4 py-6 ">
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="flex-1 bg-white shadow-lg rounded-lg p-6 border">
           <h2 className="text-xl font-semibold mb-4">Project Details</h2>
@@ -221,6 +219,25 @@ export const DetailChat = () => {
           </div>
         </div>
       </div>
+
+      <Link>
+        <button
+          className="right-2 bottom-2 
+        sm:right-10 sm:bottom-10
+        p-3
+        sm:p-4
+        fixed
+        border-2 rounded-full
+        hover:scale-110 duration-300
+        font-bold
+        bg-black
+        text-white
+        lg:text-lg
+        hover:bg-gray-800 transform hover:scale-105 transition-all duration-200"
+        >
+          Image Generator
+        </button>
+      </Link>
     </div>
   );
 };
