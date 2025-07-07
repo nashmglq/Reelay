@@ -1,6 +1,7 @@
 export const Header = () => {
   return (
-    <div className="flex bg-stone-900 border-1 border-neutral-200 p-4 z-40 sticky top-0">
+    // Just add fixed to be part of screen and not push
+    <div className="flex bg-stone-900 border-1 border-neutral-200 w-full p-4 z-40 fixed top-0">
       <div>
         <h1 className="font-extrabold text-white">Reelay</h1>
       </div>
