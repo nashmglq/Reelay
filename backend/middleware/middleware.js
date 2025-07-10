@@ -22,13 +22,11 @@ const storage = multer.diskStorage({
     cb(null, "uploads/");
   },
 
-  // use +, because using "," will just make it skip
   filename: (req, file, cb) => {
     cb(null, Date.now() + "-" + file.originalname);
   },
 });
 
 const upload = multer({ storage });
-
 
 module.exports = { authCheck, upload };
