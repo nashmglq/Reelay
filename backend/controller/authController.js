@@ -76,5 +76,27 @@ const getProfile = async (req, res) => {
   }
 };
 
+const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const {profilePic, name} = req.body;
+
+    if(!profilePic || !name){
+      return res.status(400).json({error: "Please provide profile picture and name."})
+    }
+
+    await prisma.user.update({
+      where: {id: userId},
+      data:{
+        profilePic,
+        name
+      }
+    })
+    return res.status(200).json({success: "Successfully updated"})
+
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
 
 module.exports = { verificationGoogleToken, getProfile };
