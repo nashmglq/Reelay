@@ -79,7 +79,9 @@ const getProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const {profilePic, name} = req.body;
+    const profilePic = req.file?.filename;
+    const {name} = req.body;
+    console.log(profilePic, name)
 
     if(!profilePic || !name){
       return res.status(400).json({error: "Please provide profile picture and name."})
@@ -92,6 +94,7 @@ const updateProfile = async (req, res) => {
         name
       }
     })
+
     return res.status(200).json({success: "Successfully updated"})
 
   } catch (err) {
@@ -99,4 +102,4 @@ const updateProfile = async (req, res) => {
   }
 };
 
-module.exports = { verificationGoogleToken, getProfile };
+module.exports = { verificationGoogleToken, getProfile, updateProfile };

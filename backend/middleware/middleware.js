@@ -26,7 +26,7 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + "-" + file.originalname);
   },
 });
-// check multer
+
 const upload = multer({ storage });
 
 module.exports = { authCheck, upload };
