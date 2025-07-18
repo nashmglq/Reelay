@@ -79,6 +79,7 @@ const getProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
+    console.log(req.file)
     const profilePic = req.file?.filename;
     const {name} = req.body;
     console.log(profilePic, name)
