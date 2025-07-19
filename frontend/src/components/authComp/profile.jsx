@@ -9,8 +9,10 @@ export const Profile = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [updateShow, setUpdateShow] = useState(false);
   const [updateForm, setUpdateForm] = useState(false);
-  const [profilePic, setProfilePic] = useState("");
+  const [profilePic, setProfilePic] = useState(null);
   const [name, setName] = useState("");
+  const [preview, setPreview] = useState(null);
+
   const { getProfile, loading, success, error, message } = getProfileStore();
   const {
     updateProfile,
@@ -22,34 +24,43 @@ export const Profile = () => {
 
   useEffect(() => {
     getProfile();
-  }, [getProfile]);
+    
+  }, [getProfile, updateSuccess]);
 
   const showHandler = (e) => {
     e.preventDefault();
-    setShow(show ? false : true);
+    setShow(!show);
   };
 
   useEffect(() => {
-    const handelChange = () => {
+    const handleChange = () => {
       setIsMobile(window.innerWidth < 640);
     };
-    handelChange();
-
-    window.addEventListener("resize", handelChange);
-
-    return () => {
-      window.removeEventListener("resize", handelChange);
-    };
+    handleChange();
+    window.addEventListener("resize", handleChange);
+    return () => window.removeEventListener("resize", handleChange);
   }, []);
+
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
 
   const updateProfileHandler = (e) => {
     e.preventDefault();
-    const formData = { name, profilePic };
+    const formData = new FormData();
+
+    formData.append("name", name || message.name);
+
+    if (profilePic) {
+      formData.append("profilePic", profilePic);
+    }
+
     updateProfile(formData);
     setUpdateForm(false);
   };
 
-  console.log(message);
   return (
     <div>
       <button onClick={showHandler} className="sm:hidden">
@@ -61,14 +72,17 @@ export const Profile = () => {
           <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-xl border-2 w-[90%] sm:w-1/2 p-4">
               <button onClick={showHandler}>
-                {" "}
                 <X />
               </button>
 
               <div className="flex items-center">
                 <div className="relative w-24 h-24 m-2 rounded-full overflow-hidden flex-shrink-0">
                   <img
-                    src={`${baseUrl}/uploads/${message.profilePic}`}
+                    src={
+                      preview
+                        ? preview
+                        : `${baseUrl}/uploads/${message.profilePic}`
+                    }
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       e.target.onerror = null;
@@ -86,10 +100,7 @@ export const Profile = () => {
                           const file = e.target.files[0];
                           if (file) {
                             setProfilePic(file);
-                            const reader = new FileReader();
-                            reader.onload = (e) =>
-                              setProfilePic(e.target.result);
-                            reader.readAsDataURL(file);
+                            setPreview(URL.createObjectURL(file));
                           }
                         }}
                         className="hidden"
@@ -134,18 +145,17 @@ export const Profile = () => {
       ) : isMobile === false ? (
         <div
           className="flex mt-10 ml-10 rounded-lg shadow-xl border-2 w-full h-auto flex-col"
-          onMouseEnter={() => {
-            setUpdateShow(true);
-          }}
-          onMouseLeave={() => {
-            setUpdateShow(false);
-          }}
+          onMouseEnter={() => setUpdateShow(true)}
+          onMouseLeave={() => setUpdateShow(false)}
         >
           <div className="my-2 w-full flex items-center">
-            {/* Initially set it as div */}
             <div className="relative w-24 h-24 m-2 rounded-full overflow-hidden flex-shrink-0">
               <img
-                src={`${baseUrl}/uploads/${message.profilePic}`}
+                src={
+                  preview
+                    ? preview
+                    : `${baseUrl}/uploads/${message.profilePic}`
+                }
                 className="w-full h-full object-cover"
                 onError={(e) => {
                   e.target.onerror = null;
@@ -163,9 +173,7 @@ export const Profile = () => {
                       const file = e.target.files[0];
                       if (file) {
                         setProfilePic(file);
-                        const reader = new FileReader();
-                        reader.onload = (e) => setProfilePic(e.target.result);
-                        reader.readAsDataURL(file);
+                        setPreview(URL.createObjectURL(file));
                       }
                     }}
                     className="hidden"
@@ -186,7 +194,7 @@ export const Profile = () => {
                     <Check onClick={updateProfileHandler} />
                   </div>
                 ) : (
-                  <p>{message && message.name ? message.name : "Name error"}</p>
+                  <p>{message?.name || "Name error"}</p>
                 )}
 
                 {updateShow && !updateForm ? (
@@ -201,7 +209,7 @@ export const Profile = () => {
                   </button>
                 ) : null}
               </div>
-              <p>{message && message.email ? message.email : "Email error"}</p>
+              <p>{message?.email || "Email error"}</p>
             </div>
           </div>
         </div>

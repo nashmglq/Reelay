@@ -103,19 +103,19 @@ export const AddChat = () => {
                 {platforms.map((platform, index) => (
                   <button
                     key={index}
-                    className={`w-full px-2 py-1 text-white  transition-colors duration-300 my-2
+                    className={`w-full px-2 py-1 text-white transition-colors duration-300 my-2
                       ${
                         platform === "Tiktok"
-                          ? "bg-[#010101] rounded-l-lg hover:bg-neutral-800"
+                          ? "bg-black rounded-l-lg hover:bg-gray-800"
                           : platform === "Youtube"
-                          ? "bg-[#FF0000] hover:bg-red-800"
+                          ? "bg-red-600 hover:bg-red-700"
                           : platform === "Facebook"
-                          ? "bg-[#1877F2] rounded-r-lg hover:bg-blue-800"
+                          ? "bg-blue-600 rounded-r-lg hover:bg-blue-700"
                           : ""
                       }
                       ${
                         selectedPlatforms.includes(platform)
-                          ? "border-2 border-neutral-200"
+                          ? "ring-2 ring-gray-400"
                           : ""
                       }
                       `}
@@ -138,18 +138,17 @@ export const AddChat = () => {
                 {types.map((type, index) => (
                   <button
                     key={index}
-                    className={`
-                      w-full px-2 py-1 text-white transition-colors duration-300 my-2
-                      ${
-                        type === "Script"
-                          ? "bg-black hover:bg-neutral-600 rounded-l-lg"
-                          : type === "Image"
-                          ? "bg-gray-900 hover:bg-neutral-600 rounded-r-lg"
-                          : ""
-                      }
+                    className={`w-full px-2 py-1 text-white transition-colors duration-300 my-2
+                    ${
+                      type === "Script"
+                        ? "bg-black hover:bg-gray-800 rounded-l-lg"
+                        : type === "Image"
+                        ? "bg-gray-800 hover:bg-gray-700 rounded-r-lg"
+                        : ""
+                    }
                       ${
                         selectedTypes.includes(type)
-                          ? "border-2 border-gray-200"
+                          ? "ring-2 ring-gray-400"
                           : ""
                       }
                       `}
