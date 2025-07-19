@@ -20,19 +20,13 @@ export const Profile = () => {
     const handelChange = () => {
       setIsMobile(window.innerWidth < 640);
     };
-    handelChange(); // call in the first useEffect...
+    handelChange();
 
-    // this will handel the rest...
     window.addEventListener("resize", handelChange);
-    // This return is a cleanup function.
-    // It removes the old event listener when the component is removed or updated,
-    // to avoid stacking multiple listeners and prevent memory leaks.
 
     return () => {
       window.removeEventListener("resize", handelChange);
-      // return becuase when refersh it will remove..
     };
-    // no need to add window.innerWidth because is not a reactive value
   }, []);
 
   console.log(message);
@@ -69,10 +63,10 @@ export const Profile = () => {
               src={`${`${baseUrl}/uploads/${message.profilePic}`}`}
               className="rounded-full w-1/4 h-auto"
               onError={(e) => {
-                e.target.onerror = null; 
-                e.target.src = message.profilePic; 
+                e.target.onerror = null;
+                e.target.src = message.profilePic;
               }}
-              alt = "Profiel Picture"
+              alt="Profiel Picture"
             />
 
             <p>{message && message.name ? message.name : "Name error"}</p>
