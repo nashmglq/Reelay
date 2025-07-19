@@ -3,6 +3,7 @@ import { getProfileStore } from "../../stores/authStore";
 import { createPortal } from "react-dom";
 import { User, X } from "lucide-react";
 export const Profile = () => {
+  const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
   const [show, setShow] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { getProfile, loading, success, error, message } = getProfileStore();
@@ -23,18 +24,18 @@ export const Profile = () => {
 
     // this will handel the rest...
     window.addEventListener("resize", handelChange);
-  // This return is a cleanup function.
-  // It removes the old event listener when the component is removed or updated,
-  // to avoid stacking multiple listeners and prevent memory leaks.
+    // This return is a cleanup function.
+    // It removes the old event listener when the component is removed or updated,
+    // to avoid stacking multiple listeners and prevent memory leaks.
 
     return () => {
-      window.removeEventListener("resize", handelChange)
+      window.removeEventListener("resize", handelChange);
       // return becuase when refersh it will remove..
     };
     // no need to add window.innerWidth because is not a reactive value
   }, []);
 
-  // console.log(message)
+  console.log(message);
   return (
     <div>
       <button onClick={showHandler} className="sm:hidden">
@@ -65,12 +66,13 @@ export const Profile = () => {
         <div className="flex mt-10 ml-10 rounded-lg shadow-xl border-2 w-full h-auto">
           <div className="my-2 w-full flex flex-col items-center">
             <img
-              src={`${
-                message && message.profilePic
-                  ? message.profilePic
-                  : "default.jpg"
-              }`}
+              src={`${`${baseUrl}/uploads/${message.profilePic}`}`}
               className="rounded-full w-1/4 h-auto"
+              onError={(e) => {
+                e.target.onerror = null; 
+                e.target.src = message.profilePic; 
+              }}
+              alt = "Profiel Picture"
             />
 
             <p>{message && message.name ? message.name : "Name error"}</p>
