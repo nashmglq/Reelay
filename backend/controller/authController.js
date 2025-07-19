@@ -84,8 +84,8 @@ const updateProfile = async (req, res) => {
     const {name} = req.body;
     console.log(profilePic, name)
 
-    if(!profilePic || !name){
-      return res.status(400).json({error: "Please provide profile picture and name."})
+    if(!name){
+      return res.status(400).json({error: "Please provide name."})
     }
 
     await prisma.user.update({
