@@ -48,8 +48,6 @@ export const authStore = create(
   }))
 );
 
-
-
 export const getProfileStore = create(
   devtools((set) => ({
     loading: false,
@@ -97,7 +95,6 @@ export const getProfileStore = create(
   }))
 );
 
-
 export const updateProfileStore = create(
   devtools((set) => ({
     loading: false,
@@ -105,12 +102,12 @@ export const updateProfileStore = create(
     error: false,
     message: "",
 
-    updateProfile: async (id) => {
+    updateProfile: async (formData) => {
       try {
         set({
           loading: true,
           success: false,
-          error: false
+          error: false,
         });
 
         const getToken = JSON.parse(localStorage.getItem("userInfo"));
@@ -125,12 +122,13 @@ export const updateProfileStore = create(
           : null;
 
         const response = await axios.put(
-          `${baseUrl}/crud-genAi/get-prev-images/${id}`,
+          `${baseUrl}/auth/update-profile`,
+          formData,
           config
         );
-        console.log(response)
+        console.log(response);
         if (response.data && response.data.success) {
-            set({
+          set({
             loading: false,
             success: true,
             error: false,
@@ -151,7 +149,6 @@ export const updateProfileStore = create(
     },
   }))
 );
-
 
 // create( devtools( (set) => ( { } )  )  )
 export const newChatStore = create(
