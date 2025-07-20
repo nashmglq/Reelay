@@ -209,7 +209,7 @@ export const Profile = () => {
                   </button>
                 ) : null}
               </div>
-              <p>{message?.email || "Email error"}</p>
+              <p className="md:text-[75%]">{message?.email || "Email error"}</p>
             </div>
           </div>
         </div>
