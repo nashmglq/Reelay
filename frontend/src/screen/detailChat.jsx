@@ -52,6 +52,13 @@ export const DetailChat = () => {
     }
   }, [genScriptMessage]);
 
+  useEffect(() => {
+    console.log(message.typeOfChat)
+   if( message?.typeOfChat?.includes("Image") && message?.typeOfChat?.length === 1){
+    navigate(`/chat/image/${id}`)
+   }
+  },[getDetail, message])
+
   const handleGenerate = (e) => {
     e.preventDefault();
     const formData = {

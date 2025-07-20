@@ -63,7 +63,7 @@ export const ImageScreen = () => {
 
   const openModal = (thumbnail) => {
     setModalImage(
-      `${process.env.REACT_APP_SERVER_BASE_URL}/genImage/${thumbnail}.png`
+      `${process.env.REACT_APP_SERVER_BASE_URL}/uploads/genImage/${thumbnail}.png`
     );
   };
 
@@ -182,7 +182,7 @@ export const ImageScreen = () => {
             <div className="w-full h-64 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 text-sm">
               {genImgSuccess && genImgMessage ? (
                 <img
-                  src={`${process.env.REACT_APP_SERVER_BASE_URL}/genImage/${genImgMessage}.png`}
+                  src={`${process.env.REACT_APP_SERVER_BASE_URL}/uploads/genImage/${genImgMessage}.png`}
                   alt="Generated Preview"
                   className="max-h-full max-w-full object-contain"
                 />
@@ -234,7 +234,7 @@ export const ImageScreen = () => {
             <div className="flex gap-4">
               <button
                 onClick={downloadImage}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                className="px-4 py-2 bg-black text-white rounded hover:bg-neutral-900"
               >
                 Download
               </button>

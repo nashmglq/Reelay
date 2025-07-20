@@ -36,6 +36,7 @@ export const ListChat = () => {
 
   useEffect(() => {
     listView();
+    console.log(message);
   }, [listView]);
 
   useEffect(() => {
@@ -64,6 +65,7 @@ export const ListChat = () => {
   useEffect(() => {
     if (searchMessage && searchSuccess) {
       setIsSearched(true);
+      console.log(searchMessage)
     } else {
       setIsSearched(false);
     }
@@ -108,10 +110,10 @@ export const ListChat = () => {
 
         <div className="flex items-center flex-col min-h-[500px] w-full">
           {searchSuccess && searchMessage
-            ? searchMessage.map((query) => (
+            ? searchMessage.map((query, index) => (
                 <div className="border-2 rounded-lg w-full sm:w-[85%] my-2 hover:shadow-lg duration-300">
                   <div className="flex justify-between p-4">
-                    <Link to={`/chat/${query.id}`} className="block w-full">
+                    <Link to={ searchSuccess && searchSuccess[index]?.typeOfChat?.includes("Image") && searchSuccess[index]?.typeOfChat?.length === 1 ? `/chat/image/${query.id}` :   `/chat/${query.id}` } className="block w-full">
                       <div
                         className="flex gap-x-2"
                         onMouseEnter={() => {
@@ -180,7 +182,7 @@ export const ListChat = () => {
                   key={index}
                 >
                   <div className="flex justify-between p-4">
-                    <Link to={`/chat/${chat.id}`} className="block w-full">
+                    <Link to={message[index]?.typeOfChat?.includes("Image") && message[index]?.typeOfChat?.length === 1 ? `/chat/image/${chat.id}` : `/chat/${chat.id}`} className="block w-full">
                       <div
                         className="flex gap-x-2"
                         onMouseEnter={() => {
