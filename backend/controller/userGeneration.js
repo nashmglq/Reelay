@@ -152,7 +152,7 @@ possible and make it as a thumbnail based on the platform given:\n\n${prompt}
       } else if (part.inlineData) {
         const imageData = part.inlineData.data;
         const buffer = Buffer.from(imageData, "base64");
-        fs.writeFileSync(`genImage/${fileName}.png`, buffer);
+        fs.writeFileSync(`uploads/genImage/${fileName}.png`, buffer);
 
         const saveImage = await prisma.genImage.create({
           data: {
