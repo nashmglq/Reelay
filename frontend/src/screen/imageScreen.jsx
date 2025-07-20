@@ -62,7 +62,9 @@ export const ImageScreen = () => {
   }, [genHistorySuccess, genHistoryMessage]);
 
   const openModal = (thumbnail) => {
-    setModalImage(`${process.env.REACT_APP_SERVER_BASE_URL}/genImage/${thumbnail}.png`);
+    setModalImage(
+      `${process.env.REACT_APP_SERVER_BASE_URL}/genImage/${thumbnail}.png`
+    );
   };
 
   const closeModal = () => setModalImage(null);
@@ -196,15 +198,19 @@ export const ImageScreen = () => {
           <h2 className="text-xl font-semibold mb-4">Generated Images</h2>
           <div className="flex-1 overflow-y-auto max-h-[500px]">
             {genHistoryLoading ? (
-              <div className="text-center text-gray-500">Loading image history...</div>
+              <div className="text-center text-gray-500">
+                Loading image history...
+              </div>
             ) : imageHistory.length === 0 ? (
-              <div className="text-center text-gray-500">No image history available</div>
+              <div className="text-center text-gray-500">
+                No image history available
+              </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {imageHistory.map((img) => (
                   <img
                     key={img.image_id}
-                    src={`${process.env.REACT_APP_SERVER_BASE_URL}/genImage/${img.thumbnailImage}.png`}
+                    src={`${process.env.REACT_APP_SERVER_BASE_URL}/uploads/genImage/${img.thumbnailImage}.png`}
                     alt={`Generated ${img.image_id}`}
                     className="w-full h-auto rounded shadow cursor-pointer"
                     onClick={() => openModal(img.thumbnailImage)}
@@ -220,7 +226,11 @@ export const ImageScreen = () => {
       {modalImage && (
         <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center px-4">
           <div className="bg-white p-4 rounded shadow-lg max-w-full max-h-full flex flex-col items-center">
-            <img src={modalImage} alt="Preview" className="max-w-[90vw] max-h-[80vh] mb-4" />
+            <img
+              src={modalImage}
+              alt="Preview"
+              className="max-w-[90vw] max-h-[80vh] mb-4"
+            />
             <div className="flex gap-4">
               <button
                 onClick={downloadImage}
