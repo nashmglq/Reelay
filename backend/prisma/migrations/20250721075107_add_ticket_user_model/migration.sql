@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "user" ADD COLUMN     "ticket" INTEGER NOT NULL DEFAULT 50;

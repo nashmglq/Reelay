@@ -8,6 +8,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 const crypto = require("crypto");
 
+
 const newChat = async (req, res) => {
   try {
     const { title, selectedPlatforms, selectedTypes, scriptType } = req.body;
@@ -312,6 +313,40 @@ const updateChat = async (req, res) => {
   }
 };
 
+const postTicket = async(req,res) =>{
+  try{
+    const userId = req.user.id;
+    const {amount} = req.body;
+
+
+    if(!amount || amount < 10 ){
+      return res.status(400).json({error: "Insufficient amount"})
+    }
+    
+    if(amount%10 !== 0){
+      return res.status(400).json({error: "Invalid Amount"})
+    }
+
+    const currentTickets = await prisma.user.findUnique({
+      where: {id: userId}
+    })
+
+    const calculate = (Math.round(amount/10) * 100) + currentTickets.ticket;
+
+    await prisma.user.update({
+      where: {id: userId},
+      data : {
+        ticket: calculate
+      }
+    })
+
+    return res.status(200).json({success: "Successfully added tickets."})
+
+  }catch(err){
+    return res.status(500).json({ error: err.message });
+  }
+}
+
 module.exports = {
   newChat,
   getListViewChat,
@@ -323,4 +358,5 @@ module.exports = {
   updateChat,
   historyChat,
   historyImage,
+  postTicket
 };

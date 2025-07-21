@@ -8,14 +8,16 @@ datasource db {
 }
 
 model User {
-  id         Int        @id @unique @default(autoincrement())
-  name       String     @db.VarChar(60)
-  email      String     @unique @db.VarChar(60)
-  googleId   String     @unique @db.VarChar(255)
+  id         Int     @id @unique @default(autoincrement())
+  name       String  @db.VarChar(60)
+  email      String  @unique @db.VarChar(60)
+  googleId   String  @unique @db.VarChar(255)
   profilePic String?
-  chat       Chat[]
-  genText    GenText[]
-  genImage   GenImage[]
+  ticket     Int     @default(30)
+
+  chat     Chat[]
+  genText  GenText[]
+  genImage GenImage[]
 
   @@map("user")
 }
