@@ -5,6 +5,7 @@ import { Home } from "./screen/home";
 import { ProtectedRoute } from "./utils/protectedRoute";
 import { DetailChat } from "./screen/detailChat";
 import { ImageScreen } from "./screen/imageScreen";
+import { Payment } from "./screen/payment";
 
 function App() {
   const clientId = process.env.REACT_APP_CLIENT_ID;
@@ -45,6 +46,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ImageScreen />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/payment"
+              element={
+                <ProtectedRoute>
+                  <Payment />
                 </ProtectedRoute>
               }
             />

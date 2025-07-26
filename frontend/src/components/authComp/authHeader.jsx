@@ -1,5 +1,5 @@
 import { useNavigate, Link } from "react-router-dom";
-import { User, LogOut, Plus } from "lucide-react";
+import { User, LogOut, Plus, Wallet } from "lucide-react";
 import { Profile } from "./profile";
 export const AuthHeader = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -27,7 +27,12 @@ export const AuthHeader = () => {
           sm:hidden
           font-normal text-white transition-all duration-300 hover:scale-110"
         >
-          <Profile/>
+          <Profile />
+        </button>
+        <button className="font-normal text-white transition-all duration-300 hover:scale-110">
+          <Link to = "/payment">
+           <Wallet />
+          </Link>
         </button>
         <button
           className="font-normal text-white transition-all duration-300 hover:scale-110"
