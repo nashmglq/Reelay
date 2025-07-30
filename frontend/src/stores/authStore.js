@@ -467,7 +467,6 @@ export const deleteChatStore = create(
   }))
 );
 
-
 export const paymentStore = create(
   devtools((set) => ({
     loading: false,
@@ -490,8 +489,8 @@ export const paymentStore = create(
             }
           : null;
 
-        const response = await axios.get(
-          `${baseUrl}/crud-genAi/get-detail-chat/${id}`,
+        const response = await axios.post(
+          `${baseUrl}/post-ticket`,
           config
         );
 
