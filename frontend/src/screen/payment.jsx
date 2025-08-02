@@ -1,7 +1,9 @@
-import React from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { useState } from "react";
 
 export const Payment = () => {
+  const [amount, setAmount] = useState("");
+
   const initialOptions = {
     "client-id": process.env.REACT_APP_PAYPAL,
     currency: "USD",
@@ -9,28 +11,37 @@ export const Payment = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
+    <div className="flex justify-center items-center min-h-screen flex-col space-y-4">
+      <input
+        type="number"
+        placeholder="Enter amount"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+        className="border px-4 py-2 rounded-md"
+        step={1}
+      />
+
+      <div className="flex p-4 shadow-lg rounded-lg justify-center items-center w-[20%]">
         <PayPalScriptProvider options={initialOptions}>
-          <div className="text-center space-y-6">
-            <h2 className="text-2xl font-semibold text-gray-800">Buy Now</h2>
-            <PayPalButtons
-              style={{ layout: "vertical", height: 45 }}
-              createOrder={(data, actions) =>
-                actions.order.create({
-                  purchase_units: [{ amount: { value: "10.00" } }],
-                })
-              }
-              onApprove={(data, actions) =>
-                actions.order.capture().then((details) => {
-                  alert(`Transaction completed by ${details.payer.name.given_name}`);
-                })
-              }
-              onError={(err) => {
-                console.error("PayPal Checkout Error:", err);
-              }}
-            />
-          </div>
+          <PayPalButtons
+            createOrder={(data, actions) => {
+              return actions.order.create({
+                purchase_units: [
+                  {
+                    amount: {
+                      value: amount || "1",  
+                    },
+                  },
+                ],
+              });
+            }}
+            onApprove={(data, actions) => {
+              return actions.order.capture().then((details) => {
+                alert(`Transaction completed by ${details.payer.name.given_name}`);
+                console.log(details);
+              });
+            }}
+          />
         </PayPalScriptProvider>
       </div>
     </div>

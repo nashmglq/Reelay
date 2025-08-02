@@ -474,7 +474,7 @@ export const paymentStore = create(
     error: false,
     message: [],
 
-    payment: async (id) => {
+    payment: async (amount) => {
       try {
         set({ loading: true, success: false, error: false, message: [] });
 
@@ -491,6 +491,7 @@ export const paymentStore = create(
 
         const response = await axios.post(
           `${baseUrl}/post-ticket`,
+          amount,
           config
         );
 
