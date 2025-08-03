@@ -3,7 +3,8 @@ const {
   verificationGoogleToken,
   getProfile,
   updateProfile,
-  postTicket
+  postTicket,
+  getTicket
 } = require("../controller/authController");
 const { authCheck } = require("../middleware/middleware");
 const routeAuth = express.Router();
@@ -19,4 +20,5 @@ routeAuth.put(
   updateProfile
 );
 routeAuth.post("/post-ticket", authCheck, postTicket)
+routeAuth.get("/get-ticket", authCheck, getTicket)
 module.exports = routeAuth;

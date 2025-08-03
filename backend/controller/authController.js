@@ -133,9 +133,28 @@ const postTicket = async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
+
+const getTicket = async(req,res) => {
+  try{
+    const userId = req.user.id;
+
+    const ticketCount = await prisma.user.findUnique({
+      where: {
+        id : userId
+      }
+    })
+
+    return res.status(200).json({success: ticketCount.ticket})
+
+  }catch(err){
+    return res.status(200).json({error: err.message})
+  }
+}
+
 module.exports = {
   verificationGoogleToken,
   getProfile,
   updateProfile,
   postTicket,
+  getTicket
 };
