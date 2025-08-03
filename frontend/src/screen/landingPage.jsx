@@ -5,6 +5,7 @@ import { Header } from "../components/header";
 import { AboutUs } from "../components/aboutUs";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { Contact } from "../components/contact";
 
 export const LandingPage = () => {
   const { login } = authStore();
@@ -18,13 +19,12 @@ export const LandingPage = () => {
     console.error("Google Auth Error");
   };
 
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"))
-  useEffect(()=>{
-    if(userInfo){
-      nav("/home")
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  useEffect(() => {
+    if (userInfo) {
+      nav("/home");
     }
-  },[userInfo])
-
+  }, [userInfo]);
 
   return (
     <div>
@@ -53,6 +53,7 @@ export const LandingPage = () => {
         </div>
       </div>
       <AboutUs id="about" />
+      <Contact id="contact" />
     </div>
   );
 };
