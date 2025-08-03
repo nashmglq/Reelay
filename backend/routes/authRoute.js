@@ -3,11 +3,12 @@ const {
   verificationGoogleToken,
   getProfile,
   updateProfile,
+  postTicket
 } = require("../controller/authController");
 const { authCheck } = require("../middleware/middleware");
 const routeAuth = express.Router();
 const {upload} = require("../middleware/middleware");
-const { postTicket } = require("../controller/userGeneration");
+
 
 routeAuth.post("/google-auth", verificationGoogleToken);
 routeAuth.get("/get-profile", authCheck, getProfile);

@@ -79,28 +79,63 @@ const getProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    console.log(req.file)
+    console.log(req.file);
     const profilePic = req.file?.filename;
-    const {name} = req.body;
-    console.log(profilePic, name)
+    const { name } = req.body;
+    console.log(profilePic, name);
 
-    if(!name){
-      return res.status(400).json({error: "Please provide name."})
+    if (!name) {
+      return res.status(400).json({ error: "Please provide name." });
     }
 
     await prisma.user.update({
-      where: {id: userId},
-      data:{
+      where: { id: userId },
+      data: {
         profilePic,
-        name
-      }
-    })
+        name,
+      },
+    });
 
-    return res.status(200).json({success: "Successfully updated"})
-
+    return res.status(200).json({ success: "Successfully updated" });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
 };
+const postTicket = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { amount } = req.body;
+    console.log(amount)
+    if (!amount || amount < 1) {
+      return res.status(400).json({ error: "Insufficient amount" });
+    }
 
-module.exports = { verificationGoogleToken, getProfile, updateProfile };
+    if (amount % 1 !== 0) {
+      return res.status(400).json({ error: "Invalid Amount" });
+    }
+
+    const currentTickets = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    const calculate = amount * 50 + currentTickets.ticket;
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        ticket: calculate,
+      },
+    });
+
+    return res.status(200).json({ success: "Successfully added tickets." });
+  } catch (err) {
+    console.log(err.message)
+    return res.status(500).json({ error: err.message });
+  }
+};
+module.exports = {
+  verificationGoogleToken,
+  getProfile,
+  updateProfile,
+  postTicket,
+};
