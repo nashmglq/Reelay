@@ -566,3 +566,43 @@ export const getTicketStore = create(
     },
   }))
 );
+
+export const emailStore = create(
+  devtools((set) => ({
+    loading: false,
+    success: false,
+    error: false,
+    message: [],
+
+    email: async (formData) => {
+      try {
+        set({ loading: true, success: false, error: false, message: [] });
+
+
+        const response = await axios.post(
+          `${baseUrl}/auth/contact`,
+          formData
+        );
+
+        if (response.data && response.data.success) {
+          set({
+            loading: false,
+            success: true,
+            error: false,
+            message: response.data.success,
+          });
+        }
+      } catch (err) {
+        set({
+          loading: false,
+          success: false,
+          error: true,
+          message:
+            err.response && err.response.data
+              ? err.response.data.error
+              : "Something went wrong.",
+        });
+      }
+    },
+  }))
+);
