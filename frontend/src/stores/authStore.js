@@ -574,13 +574,13 @@ export const emailStore = create(
     error: false,
     message: [],
 
-    email: async (formData) => {
+    emailSend: async (formData) => {
       try {
         set({ loading: true, success: false, error: false, message: [] });
 
 
         const response = await axios.post(
-          `${baseUrl}/auth/contact`,
+          `${baseUrl}/admin/contact-us`,
           formData
         );
 

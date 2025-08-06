@@ -1,4 +1,22 @@
+import { useState } from "react";
+import { emailStore } from "../stores/authStore";
+
 export const Contact = ({ id }) => {
+  const { emailSend, loading, success, error, message } = emailStore();
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [text, setText] = useState("");
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    const formData = {
+      email,
+      subject,
+      text,
+    };
+    emailSend(formData);
+  };
+
   return (
     <div id={id} className="min-h-screen bg-white text-black flex pt-20 px-20 justify-center gap-x-12">
       {/* Contact Form Side */}
@@ -7,28 +25,40 @@ export const Contact = ({ id }) => {
           Contact Us
         </h1>
         <div className="bg-gray-50 p-6 rounded-lg border-2 border-gray-200">
-          <form className="space-y-6">
-            <input
-              type="text"
-              placeholder="Your Name"
-              className="w-full border border-black p-3 bg-white placeholder-black rounded-md"
-            />
+          <form className="space-y-6" onSubmit={submitHandler}>
             <input
               type="email"
               placeholder="Your Email"
               className="w-full border border-black p-3 bg-white placeholder-black rounded-md"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Subject"
+              className="w-full border border-black p-3 bg-white placeholder-black rounded-md"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              required
             />
             <textarea
               rows="5"
               placeholder="Your Message"
               className="w-full border border-black p-3 bg-white placeholder-black resize-none rounded-md"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              required
             />
             <button
               type="submit"
               className="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800 transition"
+              disabled={loading}
             >
-              Send Message
+              {loading ? "Sending..." : "Send Message"}
             </button>
+            {success && <p className="text-green-600">Message sent successfully!</p>}
+            {error && <p className="text-red-600">{message}</p>}
           </form>
         </div>
       </div>
