@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const emailStructure = (email, subject, message) => {
+const emailStructure = (from, to, subject, text) => {
   const emailSent = {
     from,
     to,
@@ -18,5 +18,6 @@ const emailStructure = (email, subject, message) => {
 
   return transporter.sendMail(emailSent);
 };
+
 
 module.exports = emailStructure;

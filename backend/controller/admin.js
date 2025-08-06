@@ -13,7 +13,6 @@ const contactAdmin = async (req, res) => {
       `Email from ${email}: ${subject}`,
       text
     );
-
     const receipt = await sendMail(
       `"Reelay Support" <${process.env.EMAIL}>`,
       email,
@@ -25,7 +24,7 @@ Thank you for getting in touch with Reelay! We’ve received your message with t
 "${subject}"
 
 Here’s what you sent:
-"${message}"
+"${text}"
 
 We’ll get back to you as soon as possible.
 
