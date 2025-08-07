@@ -15,6 +15,12 @@ export const Contact = ({ id }) => {
       text,
     };
     emailSend(formData);
+
+    if(success){
+      setEmail("");
+      setSubject("");
+      setText("");
+    }
   };
 
   return (
