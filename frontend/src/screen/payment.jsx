@@ -12,8 +12,14 @@ export const Payment = () => {
     intent: "capture",
   };
   const submit = () => {
+
+
     const formData = { amount: parseInt(amount) };
     payment(formData);
+
+    if(success){
+      setAmount("")
+    }
   };
 
   return (
