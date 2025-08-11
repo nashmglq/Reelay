@@ -14,6 +14,7 @@ model User {
   googleId   String  @unique @db.VarChar(255)
   profilePic String?
   ticket     Int     @default(30)
+  admin       Boolean @default(false)
 
   chat     Chat[]
   genText  GenText[]

@@ -1,4 +1,8 @@
 const sendMail = require("../middleware/mailer");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
+
 const contactAdmin = async (req, res) => {
   try {
     const { email, subject, text } = req.body;
@@ -39,6 +43,32 @@ Owner, Reelay`
   }
 };
 
+
+const getUsers = async(req,res) => {
+  try{
+    const userId = req.user.id;
+
+    const adminCheck = await prisma.user.findUnique({
+      where: {id: userId}
+    })
+
+    if(!adminCheck.admin){
+      return res.status(400).json({error: "Unauthorized Access"})
+    }
+
+    const users = await prisma.user.findMany()
+
+    return res.status(200).json({success: users})
+
+  }catch(err){
+    return res.status(500).json({error: err.message})
+
+  }
+}
+
+
+
 module.exports = {
-    contactAdmin
+    contactAdmin,
+    getUsers
 }
