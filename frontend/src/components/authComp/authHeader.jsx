@@ -9,18 +9,13 @@ export const AuthHeader = () => {
   const { getTicket, loading, success, message, error } = getTicketStore();
   const nav = useNavigate();
 
-  // Helper function to check if token is valid/not expired
   const isTokenValid = () => {
     if (!userInfo || !userInfo.token) {
       return false;
     }
-
-    // If your token has an expiration field, check it
     if (userInfo.expiresAt) {
       return new Date().getTime() < new Date(userInfo.expiresAt).getTime();
     }
-
-    // If using JWT, you can decode and check expiration
     try {
       const tokenPayload = JSON.parse(atob(userInfo.token.split('.')[1]));
       if (tokenPayload.exp) {
@@ -30,9 +25,6 @@ export const AuthHeader = () => {
       console.error('Error parsing token:', e);
       return false;
     }
-
-    // If no expiration info available, assume token exists = valid
-    // (though you might want to make a lightweight validation call instead)
     return true;
   };
 
@@ -47,22 +39,16 @@ export const AuthHeader = () => {
   };
 
   useEffect(() => {
-    // Only call getTicket if we have a valid token
     if (isTokenValid()) {
       getTicket();
     } else if (userInfo) {
-      // Token exists but is invalid/expired - logout user
-      console.log('Token expired or invalid, logging out...');
       localStorage.removeItem("userInfo");
       nav("/");
     }
-    // If no userInfo at all, user is already logged out
   }, []);
 
-  // Optional: Also handle the case where API returns 401/403
   useEffect(() => {
     if (error && (error.status === 401 || error.status === 403)) {
-      console.log('API returned unauthorized, logging out...');
       localStorage.removeItem("userInfo");
       nav("/");
     }
