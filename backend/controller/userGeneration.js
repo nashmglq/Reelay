@@ -8,7 +8,6 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 const crypto = require("crypto");
 
-
 const newChat = async (req, res) => {
   try {
     const { title, selectedPlatforms, selectedTypes, scriptType } = req.body;
@@ -121,7 +120,7 @@ const generateImage = async (req, res) => {
     const { prompt, uuid, text, position, allowed, oriented } = req.body;
     const userId = req.user.id;
 
-      console.log(prompt,uuid, text,position,allowed,oriented)
+    console.log(prompt, uuid, text, position, allowed, oriented);
 
     if (!allowed)
       return res
@@ -135,7 +134,9 @@ const generateImage = async (req, res) => {
     const imagePrompt = `Based on the following prompt, generate an image that represents it as accurately as 
 possible and make it as a thumbnail based on the platform given:\n\n${prompt}
 \n\nInput the text provided: ${text ? text : "NONE"}
-\n\nPosition of text: ${position && text ? position : text && !position ? "AI WILL PICK" : "NONE"}
+\n\nPosition of text: ${
+      position && text ? position : text && !position ? "AI WILL PICK" : "NONE"
+    }
 \n\n Image Orientation : ${oriented}
 \n\nDo NOT include the platform's logo in the image.`;
 
@@ -162,7 +163,17 @@ possible and make it as a thumbnail based on the platform given:\n\n${prompt}
             userId: userId,
           },
         });
-        return res.status(200).json({ success:  `${fileName}` });
+
+        await prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            ticket: { decrement: 1 },
+          },
+        });
+
+        return res.status(200).json({ success: `${fileName}` });
       }
     }
   } catch (err) {
@@ -225,6 +236,15 @@ const generateScript = async (req, res) => {
         content: result.response.text(),
         chatId: uuid,
         userId: userId,
+      },
+    });
+
+    await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        ticket: { decrement: 1 },
       },
     });
 
@@ -313,8 +333,6 @@ const updateChat = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
   newChat,
   getListViewChat,
@@ -325,5 +343,5 @@ module.exports = {
   deleteChat,
   updateChat,
   historyChat,
-  historyImage
+  historyImage,
 };
