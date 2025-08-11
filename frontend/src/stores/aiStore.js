@@ -1,8 +1,9 @@
 import axios from "axios";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-
+import { getTicketStore } from "./authStore";
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
+const { getTicket } = getTicketStore.getState();
 
 export const generateScriptStore = create(
   devtools((set) => ({
@@ -39,6 +40,7 @@ export const generateScriptStore = create(
             error: false,
             message: response.data.success,
           });
+          getTicket();
         }
       } catch (err) {
         set({
@@ -54,7 +56,6 @@ export const generateScriptStore = create(
     },
   }))
 );
-
 
 export const generateImageStore = create(
   devtools((set) => ({
@@ -91,6 +92,7 @@ export const generateImageStore = create(
             error: false,
             message: response.data.success,
           });
+          getTicket();
         }
       } catch (err) {
         set({
@@ -119,7 +121,7 @@ export const historyChatStore = create(
         set({
           loading: true,
           success: false,
-          error: false
+          error: false,
         });
 
         const getToken = JSON.parse(localStorage.getItem("userInfo"));
@@ -137,9 +139,9 @@ export const historyChatStore = create(
           `${baseUrl}/crud-genAi/get-prev-chats/${id}`,
           config
         );
-        console.log(response)
+        console.log(response);
         if (response.data && response.data.success) {
-            set({
+          set({
             loading: false,
             success: true,
             error: false,
@@ -173,7 +175,7 @@ export const historyImageStore = create(
         set({
           loading: true,
           success: false,
-          error: false
+          error: false,
         });
 
         const getToken = JSON.parse(localStorage.getItem("userInfo"));
@@ -191,9 +193,9 @@ export const historyImageStore = create(
           `${baseUrl}/crud-genAi/get-prev-images/${id}`,
           config
         );
-        console.log(response)
+        console.log(response);
         if (response.data && response.data.success) {
-            set({
+          set({
             loading: false,
             success: true,
             error: false,
