@@ -2,7 +2,6 @@ const sendMail = require("../middleware/mailer");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-
 const contactAdmin = async (req, res) => {
   try {
     const { email, subject, text } = req.body;
@@ -43,32 +42,52 @@ Owner, Reelay`
   }
 };
 
-
-const getUsers = async(req,res) => {
-  try{
+const getUsers = async (req, res) => {
+  try {
     const userId = req.user.id;
 
     const adminCheck = await prisma.user.findUnique({
-      where: {id: userId}
-    })
+      where: { id: userId },
+    });
 
-    if(!adminCheck.admin){
-      return res.status(400).json({error: "Unauthorized Access"})
+    if (!adminCheck.admin) {
+      return res.status(400).json({ error: "Unauthorized Access" });
     }
 
-    const users = await prisma.user.findMany()
+    const users = await prisma.user.findMany();
 
-    return res.status(200).json({success: users})
-
-  }catch(err){
-    return res.status(500).json({error: err.message})
-
+    return res.status(200).json({ success: users });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
   }
-}
+};
 
+const deleteUser = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { id } = req.body;
 
+    const adminCheck = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!adminCheck.admin) {
+      return res.status(400).json({ error: "Unauthorized Access" });
+    }
+
+    if (!id) {
+      return res.status(400).json({ error: "No ID found!" });
+    }
+
+    await prisma.user.delete({
+      where: {id}
+    })
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
 
 module.exports = {
-    contactAdmin,
-    getUsers
-}
+  contactAdmin,
+  getUsers,
+};
