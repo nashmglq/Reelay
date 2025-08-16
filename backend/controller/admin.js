@@ -87,6 +87,36 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const findUser = async(req,res) =>{
+  try{
+
+    const userId = req.user.id;
+    const { query } = req.body;
+
+    const adminCheck = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!adminCheck.admin) {
+      return res.status(400).json({ error: "Unauthorized Access" });
+    }
+
+    const results = await prisma.user.findMany({
+      where: {
+        email : {
+          contains: query
+        }
+      }
+    })
+
+
+    return res.status(200).json({success: results})
+    
+  }catch(err){
+ return res.status(500).json({ error: err.message });
+  }
+}
+
 module.exports = {
   contactAdmin,
   getUsers,
