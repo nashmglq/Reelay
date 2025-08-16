@@ -120,4 +120,5 @@ const findUser = async(req,res) =>{
 module.exports = {
   contactAdmin,
   getUsers,
+  findUser
 };
