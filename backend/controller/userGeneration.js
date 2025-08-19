@@ -120,8 +120,6 @@ const generateImage = async (req, res) => {
     const { prompt, uuid, text, position, allowed, oriented } = req.body;
     const userId = req.user.id;
 
-    console.log(prompt, uuid, text, position, allowed, oriented);
-
     if (!allowed)
       return res
         .status(400)
@@ -280,7 +278,6 @@ const deleteChat = async (req, res) => {
   try {
     const userId = req.user.id;
     const { uuid } = req.params;
-    console.log(uuid);
     if (!uuid) return res.status.json({ error: "Please provide an ID." });
 
     const deleteChat = await prisma.chat.delete({
@@ -297,7 +294,6 @@ const updateChat = async (req, res) => {
   try {
     const userId = req.user.id;
     const { title, uuid } = req.body;
-    console.log(title, uuid);
 
     if (!title && !uuid)
       return res.status.json({
