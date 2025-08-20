@@ -117,8 +117,34 @@ const findUser = async(req,res) =>{
   }
 }
 
+const updateUser = async(req,res) => {
+  try{
+  const userId = req.user.id;
+  const {ticket, id} = req.body;
+
+    const adminCheck = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!adminCheck.admin) {
+      return res.status(400).json({ error: "Unauthorized Access" });
+    }
+
+    await prisma.user.update({
+      where: {id : userId},
+      data: {
+        ticket: ticket
+      }
+    })
+
+  }catch(err){
+    return res.status(500).json({error: err.message})
+  }
+}
+
 module.exports = {
   contactAdmin,
   getUsers,
-  findUser
+  findUser,
+  updateUser
 };
