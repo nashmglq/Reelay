@@ -62,7 +62,7 @@ export const Profile = () => {
 
   return (
     <div>
-      <button onClick={showHandler} className="sm:hidden">
+      <button onClick={showHandler} className="sm:hidden flex items-center justify-center">
         <User />
       </button>
 

@@ -61,16 +61,16 @@ export const AuthHeader = () => {
           <h1 className="font-extrabold text-white">Reelay</h1>
         </Link>
       </div>
-      <div className="flex w-full justify-end gap-x-10">
+      <div className="flex w-full justify-end gap-x-8">
         <button
           className="
           sm:hidden
           font-normal text-white transition-all duration-300 hover:scale-110"
         >
           <Profile />
-        </button>
+        </button> 
         {success && message ? (
-          <div className="flex gap-x-2">
+          <div className="flex gap-x-2 justify-center items-center">
             <p className="text-white">{message}</p>{" "}
             <Ticket className="text-white" />
           </div>
