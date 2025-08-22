@@ -65,7 +65,7 @@ const getUsers = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { id } = req.body;
+    const { id } = req.params;
 
     const adminCheck = await prisma.user.findUnique({
       where: { id: userId },
@@ -91,7 +91,7 @@ const findUser = async(req,res) =>{
   try{
 
     const userId = req.user.id;
-    const { query } = req.body;
+    const { query } = req.params;
 
     const adminCheck = await prisma.user.findUnique({
       where: { id: userId },
@@ -131,7 +131,7 @@ const updateUser = async(req,res) => {
     }
 
     await prisma.user.update({
-      where: {id : userId},
+      where: {id : id},
       data: {
         ticket: ticket
       }
@@ -146,5 +146,6 @@ module.exports = {
   contactAdmin,
   getUsers,
   findUser,
-  updateUser
+  updateUser,
+  deleteUser
 };
