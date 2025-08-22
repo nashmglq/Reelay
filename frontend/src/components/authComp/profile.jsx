@@ -152,7 +152,7 @@ export const Profile = () => {
           onMouseLeave={() => setUpdateShow(false)}
         >
           <div className="my-2 w-full flex items-center">
-            <div className="relative w-24 h-24 m-2 rounded-full overflow-hidden flex-shrink-0">
+            <div className="relative w-24 h-24 md:w-10 md:h-10 m-2 2xl:w-24 2xl:h-24 rounded-full overflow-hidden flex-shrink-0">
               <img
                 src={
                   preview
@@ -190,7 +190,7 @@ export const Profile = () => {
             </div>
 
             <div>
-              <div className="flex gap-x-2">
+              <div className="flex gap-x-2 md:text-[50%] lg:text-[100%]">
                 {updateForm ? (
                   <div className="flex">
                     <input
@@ -212,11 +212,11 @@ export const Profile = () => {
                       setName(message.name);
                     }}
                   >
-                    <Pencil />
+                    <Pencil size={10} />
                   </button>
                 ) : null}
               </div>
-              <p className="md:text-[75%]">{message?.email || "Email error"}</p>
+              <p className="text-[100%] md:text-[50%] xl:text-[90%]">{message?.email || "Email error"}</p>
             </div>
           </div>
         </div>
