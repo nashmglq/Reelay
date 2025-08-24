@@ -80,16 +80,15 @@ const deleteUser = async (req, res) => {
     }
 
     await prisma.user.delete({
-      where: {id}
-    })
+      where: { id },
+    });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
 };
 
-const findUser = async(req,res) =>{
-  try{
-
+const findUser = async (req, res) => {
+  try {
     const userId = req.user.id;
     const { query } = req.params;
 
@@ -103,24 +102,22 @@ const findUser = async(req,res) =>{
 
     const results = await prisma.user.findMany({
       where: {
-        email : {
-          contains: query
-        }
-      }
-    })
+        email: {
+          contains: query,
+        },
+      },
+    });
 
-
-    return res.status(200).json({success: results})
-    
-  }catch(err){
- return res.status(500).json({ error: err.message });
+    return res.status(200).json({ success: results });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
   }
-}
+};
 
-const updateUser = async(req,res) => {
-  try{
-  const userId = req.user.id;
-  const {ticket, id} = req.body;
+const updateUser = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { ticket, id } = req.body;
 
     const adminCheck = await prisma.user.findUnique({
       where: { id: userId },
@@ -131,21 +128,40 @@ const updateUser = async(req,res) => {
     }
 
     await prisma.user.update({
-      where: {id : id},
+      where: { id: id },
       data: {
-        ticket: ticket
-      }
-    })
-
-  }catch(err){
-    return res.status(500).json({error: err.message})
+        ticket: ticket,
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
   }
-}
+};
+
+const adminCheck = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const adminCheck = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    console.log(adminCheck.admin);
+
+    if (adminCheck.admin === true) {
+      return res.status(200).json({ success: adminCheck.admin });
+    }
+    return res.status(200).json({ success: adminCheck.admin });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
 
 module.exports = {
   contactAdmin,
   getUsers,
   findUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  adminCheck
 };
