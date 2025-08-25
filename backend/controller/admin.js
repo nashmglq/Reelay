@@ -91,6 +91,7 @@ const findUser = async (req, res) => {
   try {
     const userId = req.user.id;
     const { query } = req.params;
+    
 
     const adminCheck = await prisma.user.findUnique({
       where: { id: userId },
@@ -104,11 +105,13 @@ const findUser = async (req, res) => {
       where: {
         email: {
           contains: query,
+          mode : "insensitive"
         },
       },
     });
 
-    return res.status(200).json({ success: results });
+    console.log(results)
+    return res.status(200).json({success: results})
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
