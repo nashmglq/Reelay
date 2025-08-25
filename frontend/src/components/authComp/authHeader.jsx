@@ -1,12 +1,20 @@
 import { useNavigate, Link } from "react-router-dom";
-import { User, LogOut, Plus, Wallet, Ticket } from "lucide-react";
+import { LogOut, Wallet, Ticket, ShieldUser } from "lucide-react";
 import { Profile } from "./profile";
 import { getTicketStore } from "../../stores/authStore";
 import { useEffect } from "react";
+import { adminCheckStore } from "../../stores/admin";
 
 export const AuthHeader = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const { getTicket, loading, success, message, error } = getTicketStore();
+  const {
+    adminCheck,
+    loading: adminLoading,
+    success: adminSuccess,
+    message: adminMessage,
+    error: adminError,
+  } = adminCheckStore();
   const nav = useNavigate();
 
   const isTokenValid = () => {
@@ -17,12 +25,12 @@ export const AuthHeader = () => {
       return new Date().getTime() < new Date(userInfo.expiresAt).getTime();
     }
     try {
-      const tokenPayload = JSON.parse(atob(userInfo.token.split('.')[1]));
+      const tokenPayload = JSON.parse(atob(userInfo.token.split(".")[1]));
       if (tokenPayload.exp) {
         return Date.now() < tokenPayload.exp * 1000;
       }
     } catch (e) {
-      console.error('Error parsing token:', e);
+      console.error("Error parsing token:", e);
       return false;
     }
     return true;
@@ -48,6 +56,10 @@ export const AuthHeader = () => {
   }, []);
 
   useEffect(() => {
+    adminCheck();
+  }, []);
+
+  useEffect(() => {
     if (error && (error.status === 401 || error.status === 403)) {
       localStorage.removeItem("userInfo");
       nav("/");
@@ -61,14 +73,23 @@ export const AuthHeader = () => {
           <h1 className="font-extrabold text-white">Reelay</h1>
         </Link>
       </div>
-      <div className="flex w-full justify-end gap-x-8">
+
+      <div className="flex w-full justify-end gap-x-6">
+        {adminMessage && (
+          <button className="font-normal text-white transition-all duration-300 hover:scale-110">
+            <Link to="/admin">
+              <ShieldUser />
+            </Link>
+          </button>
+        )}
+
         <button
           className="
           sm:hidden
           font-normal text-white transition-all duration-300 hover:scale-110"
         >
           <Profile />
-        </button> 
+        </button>
         {success && message ? (
           <div className="flex gap-x-2 justify-center items-center">
             <p className="text-white">{message}</p>{" "}
