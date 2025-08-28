@@ -58,6 +58,7 @@ const getUsers = async (req, res) => {
       where: {},
       select: {
         email: true,
+        id: true,
         name: true,
         profilePic: true,
         ticket: true,
@@ -117,6 +118,7 @@ const findUser = async (req, res) => {
       },
       select: {
         email: true,
+        id: true,
         name: true,
         profilePic: true,
         ticket: true,
