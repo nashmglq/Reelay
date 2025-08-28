@@ -1,9 +1,12 @@
-import { Search } from "lucide-react";
+import { Search, ShieldUser } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getUsersStore, searchUserStore } from "../stores/admin";
+import { UpdateUser } from "../components/adminComp/update";
+import { DeleteUser } from "../components/adminComp/deleteUser";
 
 export const AdminPannel = () => {
   const [query, setQuery] = useState("");
+  const [isSearch, setSearch] = useState(false);
   const { getUser, loading, success, error, message } = getUsersStore();
   const {
     searchUser,
@@ -17,8 +20,10 @@ export const AdminPannel = () => {
     e.preventDefault();
     if (query.trim() === "") {
       getUser();
+      setSearch(false);
     } else {
       searchUser(query);
+      setSearch(true);
     }
   };
 
@@ -44,39 +49,54 @@ export const AdminPannel = () => {
       </form>
 
       <div className="flex flex-col justify-center items-center w-1/2">
-        {searchMessage && searchMessage.length > 0
-          ? searchMessage.map((findUser) => (
-              <div
-                key={findUser.id}
-                className="border-2 rounded-lg p-2 w-full m-2 flex gap-x-2 items-center"
-              >
-                <div className="flex h-full items-center gap-x-2">
-                  <img
-                    src={
-                      findUser && findUser.profilePic?.startsWith("http")
-                        ? findUser.profilePic
-                        : `${process.env.REACT_APP_SERVER_BASE_URL}/uploads/${findUser.profilePic}`
-                    }
-                    className="w-10 h-10 object-cover rounded-full"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = "default.jpg";
-                    }}
-                    alt="Profile Picture"
-                  />
-                  <div className="flex flex-col">
-                    <p>{findUser.name}</p>
-                    <p className="text-sm text-gray-400">{findUser.email}</p>
+        {isSearch
+          ? searchMessage &&
+            Array.isArray(searchMessage) &&
+            searchMessage.length > 0
+            ? searchMessage.map((findUser) => (
+                <div
+                  key={findUser.id}
+                  className="border-2 rounded-lg p-2 w-full m-2 flex justify-between items-center"
+                >
+                  <div className="flex h-full items-center gap-x-2">
+                    <img
+                      src={
+                        findUser && findUser.profilePic?.startsWith("http")
+                          ? findUser.profilePic
+                          : `${process.env.REACT_APP_SERVER_BASE_URL}/uploads/${findUser.profilePic}`
+                      }
+                      className="w-10 h-10 object-cover rounded-full"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "default.jpg";
+                      }}
+                      alt="Profile Picture"
+                    />
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-x-2">
+                        <p>{findUser.name} </p>
+                        <span className="text-sm text-gray-300">
+                          {findUser.admin ? <ShieldUser size={18} /> : null}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-400">{findUser.email}</p>
+                      <p className="text-sm text-gray-500">
+                        Ticket: {findUser.ticket}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex">
+                    <UpdateUser />
+                    <DeleteUser id={findUser.id} />
                   </div>
                 </div>
-                <p>{findUser.ticket}</p>
-              </div>
-            ))
-          : message && message.length > 0
+              ))
+            : "No user Found."
+          : message && Array.isArray(message) && message.length > 0
           ? message.map((user) => (
               <div
                 key={user.id}
-                className="border-2 rounded-lg p-2 w-full m-2 flex gap-x-2 items-center"
+                className="border-2 rounded-lg p-2 w-full m-2 flex justify-between items-center"
               >
                 <div className="flex h-full items-center gap-x-2">
                   <img
@@ -93,11 +113,22 @@ export const AdminPannel = () => {
                     alt="Profile Picture"
                   />
                   <div className="flex flex-col">
-                    <p>{user.name}</p>
+                    <div className="flex items-center gap-x-2">
+                      <p>{user.name} </p>
+                      <span className="text-sm">
+                        {user.admin ? <ShieldUser size={18} /> : null}
+                      </span>
+                    </div>
                     <p className="text-sm text-gray-400">{user.email}</p>
+                    <p className="text-sm text-gray-500">
+                      Ticket: {user.ticket}
+                    </p>
                   </div>
                 </div>
-                <p>{user.ticket}</p>
+                <div className="flex">
+                  <UpdateUser />
+                  <DeleteUser id={user.id} />
+                </div>
               </div>
             ))
           : "No users found"}
