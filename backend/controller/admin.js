@@ -54,8 +54,16 @@ const getUsers = async (req, res) => {
       return res.status(400).json({ error: "Unauthorized Access" });
     }
 
-    const users = await prisma.user.findMany();
-
+    const users = await prisma.user.findMany({
+      where: {},
+      select: {
+        email: true,
+        name: true,
+        profilePic: true,
+        ticket: true,
+        admin: true,
+      },
+    });
     return res.status(200).json({ success: users });
   } catch (err) {
     return res.status(500).json({ error: err.message });
@@ -91,7 +99,6 @@ const findUser = async (req, res) => {
   try {
     const userId = req.user.id;
     const { query } = req.params;
-    
 
     const adminCheck = await prisma.user.findUnique({
       where: { id: userId },
@@ -105,14 +112,20 @@ const findUser = async (req, res) => {
       where: {
         email: {
           contains: query,
-          mode : "insensitive"
+          mode: "insensitive",
         },
       },
+      select: {
+        email: true,
+        name: true,
+        profilePic: true,
+        ticket: true,
+        admin: true,
+      },
     });
-
-    console.log(results)
-    return res.status(200).json({success: results})
+    return res.status(200).json({ success: results });
   } catch (err) {
+    console.log(err.message);
     return res.status(500).json({ error: err.message });
   }
 };
@@ -166,5 +179,5 @@ module.exports = {
   findUser,
   updateUser,
   deleteUser,
-  adminCheck
+  adminCheck,
 };
