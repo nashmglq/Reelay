@@ -6,7 +6,7 @@ const { authCheck } = require("../middleware/middleware");
 adminRoute.post("/contact-us", contactAdmin)
 adminRoute.get("/get-users", authCheck, getUsers)
 adminRoute.get("/search-user/:query", authCheck, findUser )
-adminRoute.put("/update-user", authCheck, updateUser)
+adminRoute.patch("/update-user", authCheck, updateUser)
 adminRoute.delete("/delete-user/:id", authCheck, deleteUser)
 adminRoute.get("/admin-check", authCheck, adminCheck)
 

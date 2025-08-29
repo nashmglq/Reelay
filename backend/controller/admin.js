@@ -75,7 +75,6 @@ const deleteUser = async (req, res) => {
   try {
     const userId = req.user.id;
     const { id } = req.params;
-
     const adminCheck = await prisma.user.findUnique({
       where: { id: userId },
     });
@@ -89,8 +88,10 @@ const deleteUser = async (req, res) => {
     }
 
     await prisma.user.delete({
-      where: { id },
+      where: { id : parseInt(id) },
     });
+    
+    return res.status(200).json({success: "Successfully Deleted."})
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -127,7 +128,6 @@ const findUser = async (req, res) => {
     });
     return res.status(200).json({ success: results });
   } catch (err) {
-    console.log(err.message);
     return res.status(500).json({ error: err.message });
   }
 };
@@ -135,7 +135,8 @@ const findUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { ticket, id } = req.body;
+    const { tickets, id } = req.body;
+    console.log(tickets)
 
     const adminCheck = await prisma.user.findUnique({
       where: { id: userId },
@@ -148,10 +149,11 @@ const updateUser = async (req, res) => {
     await prisma.user.update({
       where: { id: id },
       data: {
-        ticket: ticket,
+        ticket: parseInt(tickets),
       },
     });
   } catch (err) {
+    console.log(err.message)
     return res.status(500).json({ error: err.message });
   }
 };
@@ -164,7 +166,6 @@ const adminCheck = async (req, res) => {
       where: { id: userId },
     });
 
-    console.log(adminCheck.admin);
 
     if (adminCheck.admin === true) {
       return res.status(200).json({ success: adminCheck.admin });

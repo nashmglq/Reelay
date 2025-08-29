@@ -42,11 +42,11 @@ const verificationGoogleToken = async (req, res) => {
       });
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "8h",
-    });
+const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "8h" });
+const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_REFRESH_SECRET, { expiresIn: "30d" });
 
-    return res.status(200).json({ success: { token: token } });
+
+    return res.status(200).json({ success: { accessToken, refreshToken  } });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
