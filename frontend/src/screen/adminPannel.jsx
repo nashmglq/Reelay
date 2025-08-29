@@ -86,8 +86,8 @@ export const AdminPannel = () => {
                     </div>
                   </div>
                   <div className="flex">
-                    <UpdateUser />
-                    <DeleteUser id={findUser.id} />
+                    <UpdateUser id = {findUser.id} ticket = {findUser.ticket} email = {findUser.email}/>
+                    <DeleteUser id={findUser.id} email = {findUser.email}/>
                   </div>
                 </div>
               ))
@@ -126,8 +126,8 @@ export const AdminPannel = () => {
                   </div>
                 </div>
                 <div className="flex">
-                  <UpdateUser />
-                  <DeleteUser id={user.id} />
+                <UpdateUser id = {user.id} ticket = {user.ticket} email = {user.email}/>
+                  <DeleteUser id={user.id} email = {user.email}/>
                 </div>
               </div>
             ))

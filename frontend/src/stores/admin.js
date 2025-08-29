@@ -8,7 +8,7 @@ export const getUsersStore = create(
     loading: false,
     success: false,
     error: false,
-    message:[],
+    message: [],
 
     getUser: async () => {
       try {
@@ -26,7 +26,7 @@ export const getUsersStore = create(
           : null;
 
         const response = await axios.get(`${baseUrl}/admin/get-users`, config);
-          console.log(response.data.success)
+        console.log(response.data.success);
         if (response.data && response.data.success) {
           set({
             loading: false,
@@ -72,7 +72,10 @@ export const searchUserStore = create(
             }
           : null;
 
-        const response = await axios.get(`${baseUrl}/admin/search-user/${query}`, config);
+        const response = await axios.get(
+          `${baseUrl}/admin/search-user/${query}`,
+          config
+        );
 
         if (response.data && response.data.success) {
           set({
@@ -119,9 +122,14 @@ export const updateUserStore = create(
             }
           : null;
 
-        const response = await axios.get(`${baseUrl}/admin/update-user/`, config);
+        const response = await axios.patch(
+          `${baseUrl}/admin/update-user`,
+          formData,
+          config
+        );
 
         if (response.data && response.data.success) {
+          getUsersStore.getState().getUser();
           set({
             loading: false,
             success: true,
@@ -132,8 +140,8 @@ export const updateUserStore = create(
       } catch (err) {
         set({
           loading: false,
-          success: true,
-          error: false,
+          success: false,
+          error: true,
           message:
             err.response.data && err.response.data.error
               ? err.response.data.error
@@ -143,7 +151,6 @@ export const updateUserStore = create(
     },
   }))
 );
-
 
 export const deleteUserStore = create(
   devtools((set) => ({
@@ -167,9 +174,13 @@ export const deleteUserStore = create(
             }
           : null;
 
-        const response = await axios.get(`${baseUrl}/admin/delete-user/${id}`, config);
+        const response = await axios.delete(
+          `${baseUrl}/admin/delete-user/${id}`,
+          config
+        );
 
         if (response.data && response.data.success) {
+          getUsersStore.getState().getUser();
           set({
             loading: false,
             success: true,
@@ -197,7 +208,7 @@ export const adminCheckStore = create(
     loading: false,
     success: false,
     error: false,
-    message:[],
+    message: [],
 
     adminCheck: async () => {
       try {
@@ -214,8 +225,11 @@ export const adminCheckStore = create(
             }
           : null;
 
-        const response = await axios.get(`${baseUrl}/admin/admin-check`, config);
-  
+        const response = await axios.get(
+          `${baseUrl}/admin/admin-check`,
+          config
+        );
+
         if (response.data && response.data.success) {
           set({
             loading: false,
