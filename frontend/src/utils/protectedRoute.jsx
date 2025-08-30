@@ -5,15 +5,16 @@ import { Header } from "../components/header";
 
 export const ProtectedRoute = ({ children }) => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const token = userInfo?.token
   const nav = useNavigate();
   let header = <Header />;
 
-  if (userInfo) header = <AuthHeader />;
+  if (token) header = <AuthHeader />;
   useEffect(() => {
-    if (!userInfo) {
+    if (!token) {
       nav("/");
     }
-  }, [userInfo]);
+  }, [token]);
 
   return (
     <div>

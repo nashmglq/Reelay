@@ -2,6 +2,7 @@ import axios from "axios";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { getTicketStore } from "./authStore";
+import { refreshAccessToken } from "../utils/refresher";
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 const { getTicket } = getTicketStore.getState();
 
@@ -43,7 +44,33 @@ export const generateScriptStore = create(
           getTicket();
         }
       } catch (err) {
-        set({
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+
+          const response = await axios.post(
+            `${baseUrl}/crud-genAi/gen-script`,
+            formData,
+            config
+          );
+
+          if (response.data && response.data.success) {
+            set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+            getTicket();
+          }
+        }
+
+        return set({
           loading: false,
           success: false,
           error: true,
@@ -95,7 +122,33 @@ export const generateImageStore = create(
           getTicket();
         }
       } catch (err) {
-        set({
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+
+          const response = await axios.post(
+            `${baseUrl}/crud-genAi/gen-image`,
+            formData,
+            config
+          );
+
+          if (response.data && response.data.success) {
+            set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+            getTicket();
+          }
+        }
+
+        return set({
           loading: false,
           success: false,
           error: true,
@@ -139,9 +192,8 @@ export const historyChatStore = create(
           `${baseUrl}/crud-genAi/get-prev-chats/${id}`,
           config
         );
-        console.log(response);
         if (response.data && response.data.success) {
-          set({
+          return set({
             loading: false,
             success: true,
             error: false,
@@ -149,7 +201,30 @@ export const historyChatStore = create(
           });
         }
       } catch (err) {
-        set({
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+
+          const response = await axios.get(
+            `${baseUrl}/crud-genAi/get-prev-chats/${id}`,
+            config
+          );
+          if (response.data && response.data.success) {
+            return set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+          }
+        }
+
+        return set({
           loading: false,
           success: false,
           error: true,
@@ -193,9 +268,8 @@ export const historyImageStore = create(
           `${baseUrl}/crud-genAi/get-prev-images/${id}`,
           config
         );
-        console.log(response);
         if (response.data && response.data.success) {
-          set({
+          return set({
             loading: false,
             success: true,
             error: false,
@@ -203,7 +277,30 @@ export const historyImageStore = create(
           });
         }
       } catch (err) {
-        set({
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+
+          const response = await axios.get(
+            `${baseUrl}/crud-genAi/get-prev-images/${id}`,
+            config
+          );
+          if (response.data && response.data.success) {
+            return set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+          }
+        }
+
+        return set({
           loading: false,
           success: false,
           error: true,

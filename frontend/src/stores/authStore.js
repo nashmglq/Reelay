@@ -1,7 +1,7 @@
 import axios from "axios";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-
+import { refreshAccessToken } from "../utils/refresher";
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 export const authStore = create(
@@ -19,14 +19,15 @@ export const authStore = create(
           `${baseUrl}/auth/google-auth`,
           credentials
         );
-
-        console.log(response);
         if (response.data && response.data.success) {
+          const { accessToken, refreshToken } = response.data.success;
+
           localStorage.setItem(
             "userInfo",
-            JSON.stringify(response.data.success)
+            JSON.stringify({ token: accessToken, refeshtoken: refreshToken })
           );
-          set({
+
+          return set({
             loading: false,
             success: true,
             error: false,
@@ -34,7 +35,7 @@ export const authStore = create(
           });
         }
       } catch (err) {
-        set({
+        return set({
           loading: false,
           success: false,
           error: true,
@@ -73,7 +74,7 @@ export const getProfileStore = create(
         const response = await axios.get(`${baseUrl}/auth/get-profile`, config);
 
         if (response.data && response.data.success) {
-          set({
+          return set({
             loading: false,
             success: true,
             error: false,
@@ -81,7 +82,32 @@ export const getProfileStore = create(
           });
         }
       } catch (err) {
-        set({
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+
+          if (newToken) {
+            const config = {
+              headers: {
+                Accept: "application/json",
+                Authorization: `Bearer ${newToken}`,
+              },
+            };
+            const response = await axios.get(
+              `${baseUrl}/auth/get-profile`,
+              config
+            );
+            if (response.data && response.data.success) {
+              return set({
+                loading: false,
+                success: true,
+                error: false,
+                message: response.data.success,
+              });
+            }
+            return;
+          }
+        }
+        return set({
           loading: false,
           success: false,
           error: false,
@@ -126,9 +152,8 @@ export const updateProfileStore = create(
           formData,
           config
         );
-        console.log(response);
         if (response.data && response.data.success) {
-          set({
+          return set({
             loading: false,
             success: true,
             error: false,
@@ -136,7 +161,34 @@ export const updateProfileStore = create(
           });
         }
       } catch (err) {
-        set({
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+
+          if (newToken) {
+            const config = {
+              headers: {
+                Accept: "application/json",
+                Authorization: `Bearer ${newToken}`,
+              },
+            };
+            const response = await axios.put(
+              `${baseUrl}/auth/update-profile`,
+              formData,
+              config
+            );
+
+            if (response.data && response.data.success) {
+              return set({
+                loading: false,
+                success: true,
+                error: false,
+                message: response.data.success,
+              });
+            }
+          }
+        }
+
+        return set({
           loading: false,
           success: false,
           error: true,
@@ -150,7 +202,6 @@ export const updateProfileStore = create(
   }))
 );
 
-// create( devtools( (set) => ( { } )  )  )
 export const newChatStore = create(
   devtools((set) => ({
     loading: false,
@@ -188,6 +239,31 @@ export const newChatStore = create(
           });
         }
       } catch (err) {
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+
+          const response = await axios.post(
+            `${baseUrl}/crud-genAi/create-chat`,
+            formData,
+            config
+          );
+
+          if (response.data && response.data.success) {
+            return set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+          }
+        }
+
         return set({
           loading: false,
           success: false,
@@ -239,6 +315,30 @@ export const listViewOfChatStore = create(
           });
         }
       } catch (err) {
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+
+          const response = await axios.get(
+            `${baseUrl}/crud-genAi/get-chats`,
+            config
+          );
+
+          if (response.data && response.data.success) {
+            return set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+          }
+        }
+
         return set({
           loading: false,
           success: false,
@@ -282,7 +382,7 @@ export const searchChats = create(
         );
 
         if (response.data && response.data.success) {
-          set({
+          return set({
             loading: false,
             success: true,
             error: false,
@@ -290,7 +390,32 @@ export const searchChats = create(
           });
         }
       } catch (err) {
-        set({
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+
+          const response = await axios.post(
+            `${baseUrl}/crud-genAi/search-chat`,
+            formData,
+            config
+          );
+
+          if (response.data && response.data.success) {
+            return set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+          }
+        }
+
+        return set({
           loading: false,
           success: false,
           error: true,
@@ -332,7 +457,7 @@ export const getDetailViewStore = create(
         );
 
         if (response.data && response.data.success) {
-          set({
+          return set({
             loading: false,
             success: true,
             error: false,
@@ -340,7 +465,31 @@ export const getDetailViewStore = create(
           });
         }
       } catch (err) {
-        set({
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+
+          const response = await axios.get(
+            `${baseUrl}/crud-genAi/get-detail-chat/${id}`,
+            config
+          );
+
+          if (response.data && response.data.success) {
+            return set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+          }
+        }
+
+        return set({
           loading: false,
           success: false,
           error: true,
@@ -390,14 +539,44 @@ export const updateChatStore = create(
             error: false,
             message: response.data.success,
           });
-        }
-        const { listView } = listViewOfChatStore.getState();
-        listView();
+          const { listView } = listViewOfChatStore.getState();
+          listView();
 
-        const { queryChat } = searchChats.getState();
-        queryChat();
+          const { queryChat } = searchChats.getState();
+          queryChat();
+        }
       } catch (err) {
-        set({
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+
+          const response = await axios.put(
+            `${baseUrl}/crud-genAi/update-chat`,
+            formData,
+            config
+          );
+
+          if (response.data && response.data.success) {
+            set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+          }
+          const { listView } = listViewOfChatStore.getState();
+          listView();
+
+          const { queryChat } = searchChats.getState();
+          queryChat();
+        }
+
+        return set({
           loading: false,
           success: false,
           error: true,
@@ -439,21 +618,50 @@ export const deleteChatStore = create(
         );
 
         if (response.data && response.data.success) {
-          set({
+          const { listView } = listViewOfChatStore.getState();
+          listView();
+
+          const { queryChat } = searchChats.getState();
+          queryChat();
+          return set({
             loading: false,
             success: true,
             error: false,
             message: response.data.success,
           });
         }
-
-        const { listView } = listViewOfChatStore.getState();
-        listView();
-
-        const { queryChat } = searchChats.getState();
-        queryChat();
       } catch (err) {
-        set({
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+
+          const response = await axios.delete(
+            `${baseUrl}/crud-genAi/delete-chat/${uuid}`,
+            config
+          );
+
+          if (response.data && response.data.success) {
+            set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+          }
+
+          const { listView } = listViewOfChatStore.getState();
+          listView();
+
+          const { queryChat } = searchChats.getState();
+          queryChat();
+        }
+
+        return set({
           loading: false,
           success: false,
           error: true,
@@ -495,7 +703,7 @@ export const paymentStore = create(
         );
 
         if (response.data && response.data.success) {
-          set({
+          return set({
             loading: false,
             success: true,
             error: false,
@@ -503,7 +711,32 @@ export const paymentStore = create(
           });
         }
       } catch (err) {
-        set({
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+
+          const response = await axios.post(
+            `${baseUrl}/auth/post-ticket`,
+            formData,
+            config
+          );
+
+          if (response.data && response.data.success) {
+            return set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+          }
+        }
+
+        return set({
           loading: false,
           success: false,
           error: true,
@@ -539,13 +772,10 @@ export const getTicketStore = create(
             }
           : null;
 
-        const response = await axios.get(
-          `${baseUrl}/auth/get-ticket`,
-          config
-        );
+        const response = await axios.get(`${baseUrl}/auth/get-ticket`, config);
 
         if (response.data && response.data.success) {
-          set({
+          return set({
             loading: false,
             success: true,
             error: false,
@@ -553,6 +783,30 @@ export const getTicketStore = create(
           });
         }
       } catch (err) {
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+
+          const response = await axios.get(
+            `${baseUrl}/auth/get-ticket`,
+            config
+          );
+
+          if (response.data && response.data.success) {
+            return set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+          }
+        }
+
         set({
           loading: false,
           success: false,
@@ -577,7 +831,6 @@ export const emailStore = create(
     emailSend: async (formData) => {
       try {
         set({ loading: true, success: false, error: false, message: [] });
-
 
         const response = await axios.post(
           `${baseUrl}/admin/contact-us`,

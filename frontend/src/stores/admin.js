@@ -1,6 +1,7 @@
 import axios from "axios";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import { refreshAccessToken } from "../utils/refresher";
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 export const getUsersStore = create(
@@ -26,9 +27,9 @@ export const getUsersStore = create(
           : null;
 
         const response = await axios.get(`${baseUrl}/admin/get-users`, config);
-        console.log(response.data.success);
+
         if (response.data && response.data.success) {
-          set({
+          return set({
             loading: false,
             success: true,
             error: false,
@@ -36,7 +37,31 @@ export const getUsersStore = create(
           });
         }
       } catch (err) {
-        set({
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+
+          const response = await axios.get(
+            `${baseUrl}/admin/get-users`,
+            config
+          );
+
+          if (response.data && response.data.success) {
+            return set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+          }
+        }
+
+        return set({
           loading: false,
           success: true,
           error: false,
@@ -78,7 +103,7 @@ export const searchUserStore = create(
         );
 
         if (response.data && response.data.success) {
-          set({
+          return set({
             loading: false,
             success: true,
             error: false,
@@ -86,7 +111,31 @@ export const searchUserStore = create(
           });
         }
       } catch (err) {
-        set({
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+
+          const response = await axios.get(
+            `${baseUrl}/admin/search-user/${query}`,
+            config
+          );
+
+          if (response.data && response.data.success) {
+            return set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+          }
+        }
+
+        return set({
           loading: false,
           success: true,
           error: false,
@@ -129,16 +178,44 @@ export const updateUserStore = create(
         );
 
         if (response.data && response.data.success) {
-          getUsersStore.getState().getUser();
           set({
             loading: false,
             success: true,
             error: false,
             message: response.data.success,
           });
+
+          getUsersStore.getState().getUser();
         }
       } catch (err) {
-        set({
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+
+          const response = await axios.patch(
+            `${baseUrl}/admin/update-user`,
+            formData,
+            config
+          );
+
+          if (response.data && response.data.success) {
+            set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+
+            getUsersStore.getState().getUser();
+          }
+        }
+
+        return set({
           loading: false,
           success: false,
           error: true,
@@ -180,16 +257,41 @@ export const deleteUserStore = create(
         );
 
         if (response.data && response.data.success) {
-          getUsersStore.getState().getUser();
           set({
             loading: false,
             success: true,
             error: false,
             message: response.data.success,
           });
+          getUsersStore.getState().getUser();
         }
       } catch (err) {
-        set({
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+
+          const response = await axios.delete(
+            `${baseUrl}/admin/delete-user/${id}`,
+            config
+          );
+
+          if (response.data && response.data.success) {
+            set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+            getUsersStore.getState().getUser();
+          }
+        }
+
+        return set({
           loading: false,
           success: true,
           error: false,
@@ -231,7 +333,7 @@ export const adminCheckStore = create(
         );
 
         if (response.data && response.data.success) {
-          set({
+          return set({
             loading: false,
             success: true,
             error: false,
@@ -239,7 +341,30 @@ export const adminCheckStore = create(
           });
         }
       } catch (err) {
-        set({
+        if (err.response.status === 401) {
+          const newToken = await refreshAccessToken();
+          const config = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${newToken}`,
+            },
+          };
+          const response = await axios.get(
+            `${baseUrl}/admin/admin-check`,
+            config
+          );
+
+          if (response.data && response.data.success) {
+            return set({
+              loading: false,
+              success: true,
+              error: false,
+              message: response.data.success,
+            });
+          }
+        }
+
+        return set({
           loading: false,
           success: true,
           error: false,
