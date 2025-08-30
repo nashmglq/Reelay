@@ -44,7 +44,8 @@ const newChat = async (req, res) => {
 
     return res.status(200).json({ success: `Successfully created ${title}` });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
@@ -67,7 +68,8 @@ const getListViewChat = async (req, res) => {
       success: fetchChat,
     });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
@@ -89,7 +91,8 @@ const searchChat = async (req, res) => {
     });
     return res.status(200).json({ success: search });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
@@ -111,7 +114,8 @@ const getDetailChat = async (req, res) => {
 
     return res.status(200).json({ success: getDetail });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
@@ -175,9 +179,8 @@ possible and make it as a thumbnail based on the platform given:\n\n${prompt}
       }
     }
   } catch (err) {
-    return res.status(500).json({
-      error: err.message,
-    });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
@@ -197,9 +200,8 @@ const historyImage = async (req, res) => {
 
     return res.status(200).json({ success: getImages });
   } catch (err) {
-    return res.status(500).json({
-      error: err.message,
-    });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
@@ -248,7 +250,8 @@ const generateScript = async (req, res) => {
 
     return res.status(200).json({ success: result.response.text() });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
@@ -270,7 +273,8 @@ const historyChat = async (req, res) => {
 
     return res.status(200).json({ success: chat.genText });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
@@ -286,7 +290,8 @@ const deleteChat = async (req, res) => {
 
     return res.status(200).json({ success: "Successfully deleted chat." });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
@@ -325,7 +330,8 @@ const updateChat = async (req, res) => {
 
     return res.status(200).json({ success: "Successfully updated chat." });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 

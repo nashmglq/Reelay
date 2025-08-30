@@ -42,13 +42,40 @@ const verificationGoogleToken = async (req, res) => {
       });
     }
 
-const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "8h" });
-const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_REFRESH_SECRET, { expiresIn: "30d" });
+    const accessToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "8h",
+    });
+    const refreshToken = jwt.sign(
+      { id: user.id },
+      process.env.JWT_REFRESH_SECRET,
+      { expiresIn: "30d" }
+    );
 
-
-    return res.status(200).json({ success: { accessToken, refreshToken  } });
+    return res.status(200).json({ success: { accessToken, refreshToken } });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
+  }
+};
+
+const refeshToken = (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken)
+      return res.status(401).json({ error: "No refresh token" });
+
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+
+    const newAccessToken = jwt.sign(
+      { id: decoded.id },
+      process.env.JWT_SECRET,
+      { expiresIn: "8h" }
+    );
+
+    return res.status(200).json({ accessToken: newAccessToken });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
@@ -72,7 +99,8 @@ const getProfile = async (req, res) => {
 
     return res.status(200).json({ success: user });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
@@ -96,7 +124,8 @@ const updateProfile = async (req, res) => {
 
     return res.status(200).json({ success: "Successfully updated" });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 const postTicket = async (req, res) => {
@@ -127,31 +156,33 @@ const postTicket = async (req, res) => {
 
     return res.status(200).json({ success: "Successfully added tickets." });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
-const getTicket = async(req,res) => {
-  try{
+const getTicket = async (req, res) => {
+  try {
     const userId = req.user.id;
 
     const ticketCount = await prisma.user.findUnique({
       where: {
-        id : userId
-      }
-    })
+        id: userId,
+      },
+    });
 
-    return res.status(200).json({success: ticketCount.ticket})
-
-  }catch(err){
-    return res.status(200).json({error: err.message})
+    return res.status(200).json({ success: ticketCount.ticket });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
-}
+};
 
 module.exports = {
   verificationGoogleToken,
   getProfile,
   updateProfile,
   postTicket,
-  getTicket
+  getTicket,
+  refeshToken
 };

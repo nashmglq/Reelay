@@ -4,12 +4,13 @@ const {
   getProfile,
   updateProfile,
   postTicket,
-  getTicket
+  getTicket,
+  refeshToken,
 } = require("../controller/authController");
 const { authCheck } = require("../middleware/middleware");
 const routeAuth = express.Router();
-const {upload} = require("../middleware/middleware");
-
+const { upload } = require("../middleware/middleware");
+const { auth } = require("google-auth-library");
 
 routeAuth.post("/google-auth", verificationGoogleToken);
 routeAuth.get("/get-profile", authCheck, getProfile);
@@ -19,6 +20,7 @@ routeAuth.put(
   upload.single("profilePic"),
   updateProfile
 );
-routeAuth.post("/post-ticket", authCheck, postTicket)
-routeAuth.get("/get-ticket", authCheck, getTicket)
+routeAuth.post("/post-ticket", authCheck, postTicket);
+routeAuth.get("/get-ticket", authCheck, getTicket);
+routeAuth.post("/refresh", authCheck, refeshToken);
 module.exports = routeAuth;

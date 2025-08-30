@@ -38,7 +38,8 @@ Owner, Reelay`
 
     return res.status(200).json({ success: "Successfully sent." });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
@@ -67,7 +68,8 @@ const getUsers = async (req, res) => {
     });
     return res.status(200).json({ success: users });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
@@ -93,7 +95,8 @@ const deleteUser = async (req, res) => {
     
     return res.status(200).json({success: "Successfully Deleted."})
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
@@ -128,7 +131,8 @@ const findUser = async (req, res) => {
     });
     return res.status(200).json({ success: results });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
@@ -172,7 +176,8 @@ const adminCheck = async (req, res) => {
     }
     return res.status(200).json({ success: adminCheck.admin });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    console.log(err.message);
+    return res.status(500).json({ error: "Something went wrong." });
   }
 };
 
