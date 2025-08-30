@@ -72,7 +72,7 @@ const refeshToken = (req, res) => {
       { expiresIn: "8h" }
     );
 
-    return res.status(200).json({ accessToken: newAccessToken });
+    return res.status(200).json({ success: newAccessToken });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ error: "Something went wrong." });
