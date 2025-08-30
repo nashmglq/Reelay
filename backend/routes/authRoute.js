@@ -10,7 +10,6 @@ const {
 const { authCheck } = require("../middleware/middleware");
 const routeAuth = express.Router();
 const { upload } = require("../middleware/middleware");
-const { auth } = require("google-auth-library");
 
 routeAuth.post("/google-auth", verificationGoogleToken);
 routeAuth.get("/get-profile", authCheck, getProfile);
