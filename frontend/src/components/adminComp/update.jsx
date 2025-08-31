@@ -22,7 +22,7 @@ export const UpdateUser = ({ id, ticket, email }) => {
   return (
     <div>
       <button
-        className="hover:bg-black hover:text-black p-2 sm:p-3 rounded-lg transition-all duration-300 text-gray-600 hover:scale-105"
+        className="hover:bg-gray-300 hover:text-black p-2 sm:p-3 rounded-lg transition-all duration-300 text-gray-600 hover:scale-105"
         onClick={modalButton}
       >
         <UserPen size={16} className="sm:w-5 sm:h-5" />
