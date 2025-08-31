@@ -1,17 +1,14 @@
 import { ReactTyped } from "react-typed";
 import { GoogleLogin } from "@react-oauth/google";
 import { authStore } from "../stores/authStore";
-import { Header } from "../components/header";
 import { AboutUs } from "../components/aboutUs";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Contact } from "../components/contact";
 
 export const LandingPage = () => {
   const { login } = authStore();
   const nav = useNavigate();
-  // const localStorage
-  //onSuccess will provide something, that is why we need to pass a parameter
   const handleGoogleSuccess = async (googleCredentials) => {
     await login({ credentials: googleCredentials.credential });
   };
@@ -27,8 +24,9 @@ export const LandingPage = () => {
   }, [userInfo]);
 
   return (
-    <div>
-      <div className="h-screen flex flex-col">
+    <div id ="/">
+      {/* Add padding-top to account for fixed header */}
+      <div className="h-screen flex flex-col pt-20">
         <div className="flex-grow flex flex-col justify-center items-center">
           <h1 className="text-9xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-700 p-6">
             Reelay
@@ -40,7 +38,7 @@ export const LandingPage = () => {
               typeSpeed={40}
               backSpeed={40}
               loop
-            ></ReactTyped>
+            />
           </h1>
           <GoogleLogin
             useOneTap

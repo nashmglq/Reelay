@@ -16,7 +16,7 @@ export const Contact = ({ id }) => {
     };
     emailSend(formData);
 
-    if(success){
+    if (success) {
       setEmail("");
       setSubject("");
       setText("");
@@ -24,8 +24,10 @@ export const Contact = ({ id }) => {
   };
 
   return (
-    <div id={id} className="min-h-screen bg-white text-black flex pt-20 px-20 justify-center gap-x-12">
-      {/* Contact Form Side */}
+    <div
+      id={id}
+      className="min-h-screen bg-white text-black flex pt-20 px-20 justify-center gap-x-12"
+    >
       <div className="flex flex-col w-1/2 space-y-6">
         <h1 className="text-5xl font-bold text-black border-b-4 border-black pb-4">
           Contact Us
@@ -63,36 +65,44 @@ export const Contact = ({ id }) => {
             >
               {loading ? "Sending..." : "Send Message"}
             </button>
-            {success && <p className="text-green-600">Message sent successfully!</p>}
+            {success && (
+              <p className="text-green-600">Message sent successfully!</p>
+            )}
             {error && <p className="text-red-600">{message}</p>}
           </form>
         </div>
       </div>
 
-      {/* Info Side */}
       <div className="flex flex-col w-1/2 space-y-6">
         <h1 className="text-5xl font-bold text-black border-b-4 border-black pb-4">
           Why Reach Out?
         </h1>
         <div className="bg-black text-white p-6 rounded-lg">
           <p className="text-lg leading-relaxed">
-            Whether you're a creator with feedback, a business interested in collaboration,
-            or someone with inquiries about our services, we’re here to assist you.
-            Let’s connect and build something impactful together.
+            Whether you're a content creator looking to level up your videos, a
+            business exploring engaging marketing visuals, or someone curious
+            about AI-powered tools, we’re here to help. Let’s connect and create
+            impactful short-form content together.
           </p>
         </div>
         <div className="bg-gray-50 p-6 rounded-lg border-2 border-gray-200">
-          <h3 className="text-xl font-bold text-black mb-4">Quick Contact Tips:</h3>
-          <ul className="space-y-3 text-gray-800">
-            <li>✅ Be clear with your message or inquiry</li>
-            <li>✅ Include relevant details for faster response</li>
-            <li>✅ Expect a reply within 24-48 hours</li>
+          <h3 className="text-xl font-bold text-black mb-4">
+            Ways We Can Help:
+          </h3>
+          <ul className="space-y-3 text-gray-800 list-disc list-inside">
+            <li>Guidance on using our services effectively</li>
+            <li>Support with technical or account-related issues</li>
+            <li>Collaboration and partnership opportunities</li>
           </ul>
         </div>
         <div className="bg-gray-50 p-6 rounded-lg border-2 border-gray-200">
           <h3 className="text-xl font-bold text-black mb-4">Business Hours:</h3>
-          <p className="text-gray-800">Monday - Friday: 9:00 AM - 6:00 PM (PHT)</p>
-          <p className="text-gray-800">Weekend inquiries will be addressed on Monday.</p>
+          <p className="text-gray-800">
+            Monday - Friday: 9:00 AM - 6:00 PM (PHT)
+          </p>
+          <p className="text-gray-800">
+            Weekend inquiries will be addressed on Monday.
+          </p>
         </div>
       </div>
     </div>

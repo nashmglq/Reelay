@@ -1,13 +1,36 @@
+import { Link } from "react-scroll";
+
 export const Header = () => {
   return (
     // Just add fixed to be part of screen and not push
     <div className="flex bg-stone-900 border-1 border-neutral-200 w-full p-4 z-40 fixed top-0">
       <div>
-        <h1 className="font-extrabold text-white">Reelay</h1>
+        <Link
+          to="/"
+          smooth={true}
+          duration={500}
+          className="font-extrabold text-white"
+        >
+          Reelay
+        </Link>
       </div>
       <div className="flex w-full justify-end gap-x-4">
-        <button className="font-normal text-white">About us</button>
-        <button className="font-normal text-white">Contact us</button>
+        <Link
+          to="about"
+          smooth={true}
+          duration={500}
+          className="font-normal text-white cursor-pointer hover:text-gray-300 transition-colors"
+        >
+          About us
+        </Link>
+        <Link
+          to="contact"
+          smooth={true}
+          duration={500}
+          className="font-normal text-white cursor-pointer hover:text-gray-300 transition-colors"
+        >
+          Contact us
+        </Link>
       </div>
     </div>
   );
