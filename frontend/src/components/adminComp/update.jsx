@@ -16,47 +16,71 @@ export const UpdateUser = ({ id, ticket, email }) => {
     e.preventDefault();
     const formData = { tickets, id };
     updateUser(formData);
-    setOpen(false)
+    setOpen(false);
   };
 
   return (
     <div>
       <button
-        className="hover:bg-gray-200 p-2 rounded-lg transition-all duration-300"
+        className="hover:bg-black hover:text-black p-2 sm:p-3 rounded-lg transition-all duration-300 text-gray-600 hover:scale-105"
         onClick={modalButton}
       >
-        <UserPen />
+        <UserPen size={16} className="sm:w-5 sm:h-5" />
       </button>
 
       {isOpen ? (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
-          <div className="bg-white w-1/4 flex flex-col justify-center items-center p-4 rounded-lg">
-            <div className=" flex gap-x-2">
-              <span>
-                Update <span className="font-bold">{email}'s </span> ticket
-              </span>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
+          <div className="bg-white w-full max-w-sm sm:max-w-md lg:max-w-lg rounded-xl shadow-2xl mx-4 overflow-hidden">
+            <div className="bg-gradient-to-r from-black to-black p-4 sm:p-6 text-white">
+              <div className="flex items-center justify-center mb-2">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                  <UserPen className="w-5 h-5 sm:w-6 sm:h-6" />
+                </div>
+              </div>
+              <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-center">
+                Update User
+              </h3>
+              <p className="text-sm sm:text-base text-black text-center mt-1 break-words text-white">
+                Modify <span className="font-semibold text-white">{email}'s</span> ticket count
+              </p>
             </div>
 
-            <form className="p-2" onSubmit={submitHandler}>
-              <label>Ticket: </label>
-              <input
-                placeholder="Add tickets"
-                value={tickets}
-                className="border-2 rounded-lg p-2"
-                onChange={(e) => setTickets(e.target.value)}
-              />
+            <form className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6" onSubmit={submitHandler}>
+              <div className="space-y-2">
+                <label className="block text-sm sm:text-base font-medium text-gray-700">
+                  Ticket Count
+                </label>
+                <input
+                  placeholder="Enter ticket count"
+                  value={tickets}
+                  type="number"
+                  className="w-full border-2 border-gray-300 rounded-lg p-3 sm:p-4 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all duration-200"
+                  onChange={(e) => setTickets(e.target.value)}
+                  required
+                />
+              </div>
 
-              <div className="flex gap-x-4 m-2 justify-center items-center">
-                <button className="transistion-all hover:bg-gray-800 hover:text-white duration-300 rounded-lg p-2">
-                  {" "}
-                  Update{" "}
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-6">
+                <button
+                  type="submit"
+                  className="flex-1 p-3 sm:p-4 bg-black hover:bg-black text-white font-medium rounded-lg transition-all duration-300 text-sm sm:text-base hover:scale-105 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Updating...
+                    </span>
+                  ) : (
+                    "Update"
+                  )}
                 </button>
                 <button
-                  className="transistion-all hover:bg-red-400 hover:text-white duration-300 duration-300 rounded-lg p-2"
+                  type="button"
+                  className="flex-1 p-3 sm:p-4 bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium rounded-lg transition-all duration-300 text-sm sm:text-base hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                   onClick={modalButton}
                 >
-                  {" "}
-                  Cancel{" "}
+                  Cancel
                 </button>
               </div>
             </form>
