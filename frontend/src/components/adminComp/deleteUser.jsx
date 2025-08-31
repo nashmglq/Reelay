@@ -28,9 +28,7 @@ export const DeleteUser = ({ id, email }) => {
 
       {isOpen ? (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
-          {/* Responsive Modal */}
           <div className="flex flex-col bg-white w-full max-w-sm sm:max-w-md lg:max-w-lg p-4 sm:p-6 lg:p-8 rounded-xl shadow-2xl items-center justify-center space-y-4 sm:space-y-6 mx-4">
-            {/* Modal Content */}
             <div className="text-center">
               <div className="mb-4">
                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -49,7 +47,6 @@ export const DeleteUser = ({ id, email }) => {
               </p>
             </div>
 
-            {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
               <button
                 className="flex-1 p-3 sm:p-4 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-all duration-300 text-sm sm:text-base hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
