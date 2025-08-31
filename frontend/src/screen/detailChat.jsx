@@ -106,7 +106,7 @@ export const DetailChat = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 ">
+    <div className="container mx-auto px-4 py-6 mt-10">
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="flex-1 bg-white shadow-lg rounded-lg p-6 border">
           <h2 className="text-xl font-semibold mb-4">Project Details</h2>

@@ -77,7 +77,7 @@ export const ImageScreen = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6 relative">
+    <div className="container mx-auto px-4 py-6 relative mt-10">
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Project Details */}
         <div className="w-full lg:w-1/3 bg-white shadow rounded-lg p-6 border flex flex-col">
