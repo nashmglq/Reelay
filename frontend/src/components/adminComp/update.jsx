@@ -1,6 +1,7 @@
 import { UserPen } from "lucide-react";
 import { useState } from "react";
 import { updateUserStore } from "../../stores/admin";
+import {motion} from "framer-motion";
 
 export const UpdateUser = ({ id, ticket, email }) => {
   const [isOpen, setOpen] = useState(false);
@@ -29,7 +30,10 @@ export const UpdateUser = ({ id, ticket, email }) => {
       </button>
 
       {isOpen ? (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
+        <motion.div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4"
+         initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}>
           <div className="bg-white w-full max-w-sm sm:max-w-md lg:max-w-lg rounded-xl shadow-2xl mx-4 overflow-hidden">
             <div className="bg-gradient-to-r from-black to-black p-4 sm:p-6 text-white">
               <div className="flex items-center justify-center mb-2">
@@ -85,7 +89,7 @@ export const UpdateUser = ({ id, ticket, email }) => {
               </div>
             </form>
           </div>
-        </div>
+        </motion.div>
       ) : null}
     </div>
   );
