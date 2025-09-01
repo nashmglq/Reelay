@@ -156,6 +156,8 @@ const updateUser = async (req, res) => {
         ticket: parseInt(tickets),
       },
     });
+
+    return res.status(200).json({success: "Successfully Updated."})
   } catch (err) {
     console.log(err.message)
     return res.status(500).json({ error: err.message });
