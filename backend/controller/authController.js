@@ -128,6 +128,7 @@ const updateProfile = async (req, res) => {
     return res.status(500).json({ error: "Something went wrong." });
   }
 };
+
 const postTicket = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -141,25 +142,31 @@ const postTicket = async (req, res) => {
       return res.status(400).json({ error: "Invalid Amount" });
     }
 
-    const currentTickets = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: userId },
     });
 
-    const calculate = amount * 50 + currentTickets.ticket;
+    let tickets = amount * 50;
+
+    // Apply 20% promo automatically if amount > 20
+    if (amount > 20) {
+      tickets += tickets * 0.2;
+    }
+
+    const totalTickets = user.ticket + Math.floor(tickets);
 
     await prisma.user.update({
       where: { id: userId },
-      data: {
-        ticket: calculate,
-      },
+      data: { ticket: totalTickets },
     });
 
-    return res.status(200).json({ success: "Successfully added tickets." });
+    return res.status(200).json({ success: "Tickets added successfully." });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ error: "Something went wrong." });
   }
 };
+
 
 const getTicket = async (req, res) => {
   try {
