@@ -178,6 +178,7 @@ export const updateUserStore = create(
         );
 
         if (response.data && response.data.success) {
+          console.log("Something")
           set({
             loading: false,
             success: true,
@@ -210,7 +211,7 @@ export const updateUserStore = create(
               error: false,
               message: response.data.success,
             });
-
+            console.log(`CALLING: ${getUsersStore.getState().getUser()}`)
             getUsersStore.getState().getUser();
           }
         }

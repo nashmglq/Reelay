@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { generateScriptStore, historyChatStore } from "../stores/aiStore";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { Copy, RotateCcw } from "lucide-react";
+
 const formatText = (text) => {
   if (!text || typeof text !== "string") return "";
 
@@ -53,11 +55,20 @@ export const DetailChat = () => {
   }, [genScriptMessage]);
 
   useEffect(() => {
-    console.log(message.typeOfChat)
-   if( message?.typeOfChat?.includes("Image") && message?.typeOfChat?.length === 1){
-    navigate(`/chat/image/${id}`)
-   }
-  },[getDetail, message])
+    console.log(message.typeOfChat);
+    if (
+      message?.typeOfChat?.includes("Image") &&
+      message?.typeOfChat?.length === 1
+    ) {
+      navigate(`/chat/image/${id}`);
+    }
+  }, [getDetail, message]);
+
+  useEffect(() => {
+    setInputText("");
+    setGeneratedScript("");
+    setSelectedChat(null);
+  }, [id]);
 
   const handleGenerate = (e) => {
     e.preventDefault();
@@ -68,6 +79,27 @@ export const DetailChat = () => {
       scriptType: message.scriptType,
     };
     generateScript(formData);
+  };
+
+  const handleCopy = async () => {
+    const textToCopy =
+      generatedScript || "Generated script will appear here...";
+    const plainText = textToCopy
+      .replace(/<strong>(.*?)<\/strong>/g, "$1")
+      .replace(/<br>/g, "\n")
+      .replace(/<[^>]*>/g, "");
+
+    try {
+      await navigator.clipboard.writeText(plainText);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+    }
+  };
+
+  const handleReset = () => {
+    setGeneratedScript("");
+    setInputText("");
+    setSelectedChat(null);
   };
 
   const handleChatClick = (chat) => {
@@ -84,7 +116,7 @@ export const DetailChat = () => {
   const handleGoToImage = () => {
     navigate(`/chat/image/${id}`, {
       state: {
-        allowValue: true
+        allowValue: true,
       },
     });
   };
@@ -193,17 +225,35 @@ export const DetailChat = () => {
             </button>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Generated Script
-              </label>
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Generated Script
+                </label>
+              </div>
               <div
                 className="w-full h-32 p-3 border border-gray-300 rounded-lg bg-gray-50 overflow-y-auto"
                 dangerouslySetInnerHTML={{
                   __html: formatText(
-                    generatedScript || "Generated script will appear here..."
+                    genScriptLoading ? "Generating script..." : generatedScript || "Generated script will appear here..."
                   ),
                 }}
               />
+            </div>
+            <div className="flex space-x-2">
+              <button
+                onClick={handleCopy}
+                className="flex items-center px-3 py-1 text-sm bg-black text-white rounded hover:bg-neutral-800 transition-colors"
+              >
+                <Copy className="w-4 h-4 mr-1" />
+                Copy
+              </button>
+              <button
+                onClick={handleReset}
+                className="flex items-center px-3 py-1 text-sm bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+              >
+                <RotateCcw className="w-4 h-4 mr-1" />
+                Reset
+              </button>
             </div>
           </div>
         </div>
@@ -212,7 +262,6 @@ export const DetailChat = () => {
           <h2 className="text-xl font-semibold mb-4">Chat History</h2>
 
           <div className="space-y-4">
-            {/* This container has a max height and only scrolls if content overflows */}
             <div className="max-h-[400px] overflow-y-auto border border-gray-200 rounded-lg p-3">
               {Array.isArray(historyMessage) && historyMessage.length > 0 ? (
                 historyMessage.map((chat, index) => (
