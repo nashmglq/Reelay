@@ -703,12 +703,13 @@ export const paymentStore = create(
         );
 
         if (response.data && response.data.success) {
-          return set({
+          set({
             loading: false,
             success: true,
             error: false,
             message: response.data.success,
           });
+          getTicketStore.getState().getTicket();
         }
       } catch (err) {
         if (err.response.status === 401) {
@@ -727,12 +728,13 @@ export const paymentStore = create(
           );
 
           if (response.data && response.data.success) {
-            return set({
+            set({
               loading: false,
               success: true,
               error: false,
               message: response.data.success,
             });
+            getTicketStore.getState().getTicket();
           }
         }
 

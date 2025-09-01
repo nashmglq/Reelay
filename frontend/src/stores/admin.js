@@ -2,6 +2,7 @@ import axios from "axios";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { refreshAccessToken } from "../utils/refresher";
+import { getTicketStore } from "./authStore";
 const baseUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
 export const getUsersStore = create(
@@ -178,7 +179,7 @@ export const updateUserStore = create(
         );
 
         if (response.data && response.data.success) {
-          console.log("Something")
+          console.log("Something");
           set({
             loading: false,
             success: true,
@@ -187,6 +188,7 @@ export const updateUserStore = create(
           });
 
           getUsersStore.getState().getUser();
+          getTicketStore.getState().getTicket();
         }
       } catch (err) {
         if (err.response.status === 401) {
@@ -211,8 +213,9 @@ export const updateUserStore = create(
               error: false,
               message: response.data.success,
             });
-            console.log(`CALLING: ${getUsersStore.getState().getUser()}`)
+            console.log(`CALLING: ${getUsersStore.getState().getUser()}`);
             getUsersStore.getState().getUser();
+            getTicketStore.getState().getTicket();
           }
         }
 
