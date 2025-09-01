@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getDetailViewStore } from "../stores/authStore";
 import { generateImageStore, historyImageStore } from "../stores/aiStore";
+import { motion } from "framer-motion";
 
 export const ImageScreen = () => {
   const nav = useNavigate();
@@ -77,9 +78,13 @@ export const ImageScreen = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6 relative mt-10">
+    <motion.div
+      className="container mx-auto px-4 py-6 relative mt-10"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* Project Details */}
         <div className="w-full lg:w-1/3 bg-white shadow rounded-lg p-6 border flex flex-col">
           <h2 className="text-xl font-semibold mb-4">Project Details</h2>
           <div className="space-y-3">
@@ -132,7 +137,6 @@ export const ImageScreen = () => {
           </div>
         </div>
 
-        {/* Image Generator */}
         <div className="w-full lg:w-1/3 bg-white shadow rounded-lg p-6 border flex flex-col">
           <h2 className="text-xl font-semibold mb-4">Image Generator</h2>
           <form className="space-y-4" onSubmit={submitHandler}>
@@ -193,7 +197,6 @@ export const ImageScreen = () => {
           </div>
         </div>
 
-        {/* Image History */}
         <div className="w-full lg:w-1/3 bg-white shadow rounded-lg p-6 border flex flex-col">
           <h2 className="text-xl font-semibold mb-4">Generated Images</h2>
           <div className="flex-1 overflow-y-auto max-h-[500px]">
@@ -222,7 +225,6 @@ export const ImageScreen = () => {
         </div>
       </div>
 
-      {/* Image Modal */}
       {modalImage && (
         <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center px-4">
           <div className="bg-white p-4 rounded shadow-lg max-w-full max-h-full flex flex-col items-center">
@@ -248,6 +250,6 @@ export const ImageScreen = () => {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };

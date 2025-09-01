@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getUsersStore, searchUserStore } from "../stores/admin";
 import { UpdateUser } from "../components/adminComp/update";
 import { DeleteUser } from "../components/adminComp/deleteUser";
+import { motion } from "framer-motion";
 
 export const AdminPannel = () => {
   const [query, setQuery] = useState("");
@@ -32,8 +33,12 @@ export const AdminPannel = () => {
   }, [getUser]);
 
   return (
-    <div className="flex flex-col justify-center items-center w-full mt-4 sm:mt-6 lg:mt-10 px-4 sm:px-6 lg:px-8">
-
+    <motion.div
+      className="flex flex-col justify-center items-center w-full mt-4 sm:mt-6 lg:mt-10 px-4 sm:px-6 lg:px-8"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <form
         className="flex flex-col sm:flex-row justify-center items-center w-full max-w-4xl gap-2 sm:gap-x-2 my-6 sm:my-8 lg:my-10"
         onSubmit={search}
@@ -49,7 +54,6 @@ export const AdminPannel = () => {
         </button>
       </form>
 
-
       <div className="flex flex-col justify-center items-center w-full max-w-6xl px-2 sm:px-4">
         {isSearch
           ? searchMessage &&
@@ -60,7 +64,6 @@ export const AdminPannel = () => {
                   key={findUser.id}
                   className="border-2 rounded-lg p-3 sm:p-4 lg:p-6 w-full m-1 sm:m-2 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-2 shadow-sm hover:shadow-md transition-shadow duration-200"
                 >
-   
                   <div className="flex w-full sm:w-auto items-center gap-x-3 sm:gap-x-4">
                     <img
                       src={
@@ -81,7 +84,9 @@ export const AdminPannel = () => {
                           {findUser.name}
                         </p>
                         <span className="text-sm text-gray-600 flex-shrink-0">
-                          {findUser.admin ? <ShieldUser size={16} className="sm:w-5 sm:h-5" /> : null}
+                          {findUser.admin ? (
+                            <ShieldUser size={16} className="sm:w-5 sm:h-5" />
+                          ) : null}
                         </span>
                       </div>
                       <p className="text-xs sm:text-sm text-gray-400 truncate">
@@ -92,29 +97,28 @@ export const AdminPannel = () => {
                       </p>
                     </div>
                   </div>
-                  
-    
+
                   <div className="flex gap-2 w-full sm:w-auto justify-end sm:justify-start flex-shrink-0">
-                    <UpdateUser 
-                      id={findUser.id} 
-                      ticket={findUser.ticket} 
+                    <UpdateUser
+                      id={findUser.id}
+                      ticket={findUser.ticket}
                       email={findUser.email}
                     />
-                    <DeleteUser 
-                      id={findUser.id} 
-                      email={findUser.email}
-                    />
+                    <DeleteUser id={findUser.id} email={findUser.email} />
                   </div>
                 </div>
               ))
-            : <div className="text-gray-500 text-center py-8 text-sm sm:text-base">No user found.</div>
+            : (
+              <div className="text-gray-500 text-center py-8 text-sm sm:text-base">
+                No user found.
+              </div>
+            )
           : message && Array.isArray(message) && message.length > 0
           ? message.map((user) => (
               <div
                 key={user.id}
                 className="border-2 rounded-lg p-3 sm:p-4 lg:p-6 w-full m-1 sm:m-2 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-2 shadow-sm hover:shadow-md transition-shadow duration-200"
               >
-
                 <div className="flex w-full sm:w-auto items-center gap-x-3 sm:gap-x-4">
                   <img
                     src={
@@ -135,7 +139,9 @@ export const AdminPannel = () => {
                         {user.name}
                       </p>
                       <span className="text-sm flex-shrink-0">
-                        {user.admin ? <ShieldUser size={16} className="sm:w-5 sm:h-5" /> : null}
+                        {user.admin ? (
+                          <ShieldUser size={16} className="sm:w-5 sm:h-5" />
+                        ) : null}
                       </span>
                     </div>
                     <p className="text-xs sm:text-sm text-gray-400 truncate">
@@ -146,23 +152,23 @@ export const AdminPannel = () => {
                     </p>
                   </div>
                 </div>
-                
 
                 <div className="flex gap-2 w-full sm:w-auto justify-end sm:justify-start flex-shrink-0">
-                  <UpdateUser 
-                    id={user.id} 
-                    ticket={user.ticket} 
+                  <UpdateUser
+                    id={user.id}
+                    ticket={user.ticket}
                     email={user.email}
                   />
-                  <DeleteUser 
-                    id={user.id} 
-                    email={user.email}
-                  />
+                  <DeleteUser id={user.id} email={user.email} />
                 </div>
               </div>
             ))
-          : <div className="text-gray-500 text-center py-8 text-sm sm:text-base">No users found</div>}
+          : (
+            <div className="text-gray-500 text-center py-8 text-sm sm:text-base">
+              No users found
+            </div>
+          )}
       </div>
-    </div>
+    </motion.div>
   );
 };
