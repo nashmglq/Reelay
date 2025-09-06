@@ -23,6 +23,7 @@ export const ImageScreen = () => {
     success: genImgSuccess,
     loading: genImgLoading,
     message: genImgMessage,
+    reset: resetGenerateImage,
   } = generateImageStore();
 
   const {
@@ -41,7 +42,17 @@ export const ImageScreen = () => {
   useEffect(() => {
     getDetail(id);
     historyImage(id);
-  }, [id, genImgSuccess, genImgMessage]);
+    
+    return () => {
+      generateImageStore.setState({ success: false, message: "" });
+    };
+  }, [id]);
+
+  useEffect(() => {
+    if (genImgSuccess) {
+      historyImage(id);
+    }
+  }, [genImgSuccess, id]);
 
   useEffect(() => {
     if (success && message) {
