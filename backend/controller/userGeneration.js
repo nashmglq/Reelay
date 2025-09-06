@@ -133,14 +133,15 @@ const generateImage = async (req, res) => {
       return res.status(400).json({ error: "Please input all fields." });
 
     const randomString = crypto.randomBytes(10).toString("hex").slice(0, 10);
-    const imagePrompt = `Based on the following prompt, generate an image that represents it as accurately as 
+const imagePrompt = `Based on the following prompt, generate an image that represents it as accurately as 
 possible and make it as a thumbnail based on the platform given:\n\n${prompt}
 \n\nInput the text provided: ${text ? text : "NONE"}
 \n\nPosition of text: ${
-      position && text ? position : text && !position ? "AI WILL PICK" : "NONE"
-    }
-\n\n Image Orientation : ${oriented}
-\n\nDo NOT include the platform's logo in the image.`;
+  position && text ? position : text && !position ? "AI WILL PICK" : "NONE"
+}
+\n\nImage Orientation: ${oriented}
+\n\nDo NOT include the platform's logo in the image.
+\n\nAlways generate the image in the highest possible quality, with sharp details, vivid colors, and professional finish suitable for publishing.`;
 
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash-preview-image-generation",
