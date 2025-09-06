@@ -4,6 +4,8 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { generateScriptStore, historyChatStore } from "../stores/aiStore";
 import { Copy, RotateCcw } from "lucide-react";
 import { motion } from "framer-motion";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const formatText = (text) => {
   if (!text || typeof text !== "string") return "";
@@ -88,8 +90,27 @@ export const DetailChat = () => {
 
     try {
       await navigator.clipboard.writeText(plainText);
+      toast.success("Copied to clipboard!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        theme: "colored",
+        style: { backgroundColor: "white", color: "black" },
+      });
     } catch (err) {
-      console.error("Failed to copy text: ", err);
+      toast.error("Failed to copy!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        theme: "colored",
+      style: { backgroundColor: "white", color: "black" },
+      });
     }
   };
 
@@ -143,7 +164,6 @@ export const DetailChat = () => {
         className="container mx-auto px-4 py-6 mt-10"
       >
         <div className="flex flex-col lg:flex-row gap-6">
-
           <div className="flex-1 bg-white shadow-lg rounded-lg p-6 border">
             <h2 className="text-xl font-semibold mb-4">Project Details</h2>
 
@@ -265,7 +285,6 @@ export const DetailChat = () => {
             </div>
           </div>
 
-
           <div className="flex-1 bg-white shadow-lg rounded-lg p-6 border">
             <h2 className="text-xl font-semibold mb-4">Chat History</h2>
 
@@ -294,7 +313,6 @@ export const DetailChat = () => {
         </div>
       </motion.div>
 
-
       {message?.typeOfChat?.includes("Image") && (
         <button
           onClick={handleGoToImage}
@@ -310,6 +328,7 @@ export const DetailChat = () => {
           Image Generator
         </button>
       )}
+      <ToastContainer />
     </>
   );
 };
