@@ -7,11 +7,13 @@ const path = require("path");
 const authRoute = require("./routes/authRoute")
 const genAiRoute = require("./routes/genAiRoute");
 const { adminRoute } = require("./routes/adminRoute");
+
+app.use(cors());
 // Static to get all locally such as the image
 app.use('/uploads', express.static(path.join(__dirname, "uploads")));
 // app.use("/genImage", express.static(path.join(__dirname, "genImage")));
 app.use(express.json({ limit: '10mb' }));
-app.use(cors());
+
 app.use(express.json());
 app.use("/auth", authRoute)
 app.use("/crud-genAi", genAiRoute)
