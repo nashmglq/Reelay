@@ -42,7 +42,7 @@ export const ImageScreen = () => {
   useEffect(() => {
     getDetail(id);
     historyImage(id);
-    
+
     return () => {
       generateImageStore.setState({ success: false, message: "" });
     };
@@ -81,30 +81,30 @@ export const ImageScreen = () => {
 
   const closeModal = () => setModalImage(null);
 
-const downloadImage = async () => {
-  try {
-    const response = await fetch(modalImage, { mode: "cors" });
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
+  const downloadImage = async () => {
+    try {
+      const response = await fetch(modalImage, { mode: "cors" });
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
 
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "generated-image.png";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "generated-image.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
-    window.URL.revokeObjectURL(url);
-  } catch (err) {
-    console.error("Download failed", err);
-  }
-};
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Download failed", err);
+    }
+  };
 
   return (
     <motion.div
       className="container mx-auto px-4 py-6 relative mt-10"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
       <div className="flex flex-col lg:flex-row gap-6">

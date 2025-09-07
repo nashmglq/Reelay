@@ -29,9 +29,10 @@ export const DeleteUser = ({ id, email }) => {
 
       {isOpen ? (
         <motion.div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4"
-         initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}>
+initial={{ opacity: 0 }}
+animate={{ opacity: 1 }}
+transition={{ duration: 0.5 }}
+>
           <div className="flex flex-col bg-white w-full max-w-sm sm:max-w-md lg:max-w-lg p-4 sm:p-6 lg:p-8 rounded-xl shadow-2xl items-center justify-center space-y-4 sm:space-y-6 mx-4">
             <div className="text-center">
               <div className="mb-4">

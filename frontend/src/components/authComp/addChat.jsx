@@ -79,9 +79,10 @@ export const AddChat = () => {
 
       {show ? (
         <motion.div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center"
-         initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}>
+ initial={{ opacity: 0 }}
+animate={{ opacity: 1 }}
+transition={{ duration: 0.5 }}
+>
           <div className=" rounded-lg w-[95%] sm:w-1/3 flex flex-col justify-center items-center shadow-lg p-4 bg-white border-nuetral-400">
             <button
               className="block flex w-full justify-end"

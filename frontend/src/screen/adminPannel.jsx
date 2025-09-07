@@ -35,9 +35,10 @@ export const AdminPannel = () => {
   return (
     <motion.div
       className="flex flex-col justify-center items-center w-full mt-4 sm:mt-6 lg:mt-10 px-4 sm:px-6 lg:px-8"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+initial={{ opacity: 0 }}
+animate={{ opacity: 1 }}
+transition={{ duration: 0.5 }}
+
     >
       <form
         className="flex flex-col sm:flex-row justify-center items-center w-full max-w-4xl gap-2 sm:gap-x-2 my-6 sm:my-8 lg:my-10"

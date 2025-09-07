@@ -5,7 +5,10 @@ import { motion } from "framer-motion";
 
 export const Home = () => {
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+    <motion.div initial={{ opacity: 0 }}
+animate={{ opacity: 1 }}
+transition={{ duration: 0.5 }}
+>
       <div className="flex p-4 gap-x-10 mt-10">
         <div className="hidden sm:block w-[20%] ">
           <Profile />

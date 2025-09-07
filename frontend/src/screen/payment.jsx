@@ -1,8 +1,8 @@
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useState, useEffect } from "react";
 import { paymentStore } from "../stores/authStore";
-import { CreditCard, Ticket, DollarSign } from "lucide-react";
-import {motion} from "framer-motion"
+import { CreditCard, Ticket } from "lucide-react";
+import { motion } from "framer-motion";
 
 export const Payment = () => {
   const [amount, setAmount] = useState("");
@@ -23,7 +23,9 @@ export const Payment = () => {
   };
 
   const submit = () => {
-    const finalAmount = selectedPackage ? selectedPackage.usd : parseInt(amount);
+    const finalAmount = selectedPackage
+      ? selectedPackage.usd
+      : parseInt(amount);
     payment({ amount: finalAmount });
   };
 
@@ -34,8 +36,12 @@ export const Payment = () => {
 
   const calculateTickets = (usdAmount) => usdAmount * 50;
 
-  const currentAmount = selectedPackage ? selectedPackage.usd : parseInt(amount) || 0;
-  const currentTickets = selectedPackage ? selectedPackage.tickets : calculateTickets(currentAmount);
+  const currentAmount = selectedPackage
+    ? selectedPackage.usd
+    : parseInt(amount) || 0;
+  const currentTickets = selectedPackage
+    ? selectedPackage.tickets
+    : calculateTickets(currentAmount);
 
   useEffect(() => {
     if (success) {
@@ -45,26 +51,31 @@ export const Payment = () => {
   }, [success]);
 
   return (
-   <motion.div className="bg-gray-50 py-8 px-3 min-h-screen flex justify-center items-center"
-    initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}>
-      <div className="max-w-3xl mx-auto">
+    <motion.div
+      className="bg-gray-50 py-8 px-3 min-h-screen flex justify-center items-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="max-w-3xl mx-auto w-full">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-14 h-14 bg-black text-white rounded-full mb-3">
             <CreditCard className="w-7 h-7" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-1">Get More Tickets</h1>
-          <p className="text-gray-600 text-base">Choose a package or enter a custom amount</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-1">
+            Get More Tickets
+          </h1>
+          <p className="text-gray-600 text-base">
+            Choose a package or enter a custom amount
+          </p>
           <div className="flex items-center justify-center mt-3 text-sm text-gray-500">
             <span>₱1 = 50 Tickets</span>
           </div>
-     
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div className="bg-white rounded-xl shadow-lg p-5">
+        <div className="grid md:grid-cols-2 gap-6 items-stretch">
+          <div className="space-y-4 flex flex-col">
+            <div className="bg-white rounded-xl shadow-lg p-5 flex-1">
               <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                 <Ticket className="w-5 h-5 mr-2" /> Ticket Packages
               </h2>
@@ -74,7 +85,7 @@ export const Payment = () => {
                   <button
                     key={pkg.id}
                     onClick={() => handlePackageSelect(pkg)}
-                    className={`relative p-3 rounded-lg border-2 transition-all duration-200 ${
+                    className={`relative p-3 rounded-lg border-2 transition-all duration-200 w-full ${
                       selectedPackage?.id === pkg.id
                         ? "border-black bg-black text-white"
                         : "border-gray-200 hover:border-gray-300 bg-white"
@@ -88,14 +99,28 @@ export const Payment = () => {
                       </div>
                     )}
                     <div className="text-center">
-                      <div className={`text-xl font-bold ${selectedPackage?.id === pkg.id ? "text-white" : "text-gray-900"}`}>
+                      <div
+                        className={`text-xl font-bold ${
+                          selectedPackage?.id === pkg.id
+                            ? "text-white"
+                            : "text-gray-900"
+                        }`}
+                      >
                         ₱{pkg.usd}
                       </div>
-                      <div className={`text-xs ${selectedPackage?.id === pkg.id ? "text-gray-200" : "text-gray-600"}`}>
+                      <div
+                        className={`text-xs ${
+                          selectedPackage?.id === pkg.id
+                            ? "text-gray-200"
+                            : "text-gray-600"
+                        }`}
+                      >
                         {pkg.tickets.toLocaleString()} tickets
                       </div>
                       {pkg.savings > 0 && (
-                        <div className="text-xs text-green-600 mt-0.5">+{pkg.savings}% bonus</div>
+                        <div className="text-xs text-green-600 mt-0.5">
+                          +{pkg.savings}% bonus
+                        </div>
                       )}
                     </div>
                   </button>
@@ -122,49 +147,66 @@ export const Payment = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-5 space-y-4">
-            <h3 className="text-lg font-semibold text-gray-800">Order Summary</h3>
-            <div className="space-y-2 text-gray-600 text-sm">
-              <div className="flex justify-between">
-                <span>Amount:</span>
-                <span>₱{currentAmount}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span>You'll receive:</span>
-                <span className="flex items-center">
-                  <Ticket className="w-4 h-4 mr-1" />
-                  {currentTickets.toLocaleString()} tickets
-                </span>
-              </div>
-              <div className="border-t pt-2 flex justify-between text-gray-900 font-semibold">
-                <span>Total:</span>
-                <span>₱{currentAmount} PHP</span>
-              </div>
-
-              {success && message && (
-                <div className="p-2 bg-green-50 border border-green-200 rounded text-xs">
-                  <p className="text-green-700 flex items-center">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                    {message}
-                  </p>
+          <div className="bg-white rounded-xl shadow-lg p-5 space-y-4 flex-1 flex flex-col">
+            <h3 className="text-lg font-semibold text-gray-800">
+              Order Summary
+            </h3>
+            <div className="space-y-2 text-gray-600 text-sm flex-1 flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between">
+                  <span>Amount:</span>
+                  <span>₱{currentAmount}</span>
                 </div>
-              )}
+                <div className="flex justify-between items-center">
+                  <span>You'll receive:</span>
+                  <span className="flex items-center">
+                    <Ticket className="w-4 h-4 mr-1" />
+                    {currentTickets.toLocaleString()} tickets
+                  </span>
+                </div>
+                <div className="border-t pt-2 flex justify-between text-gray-900 font-semibold">
+                  <span>Total:</span>
+                  <span>₱{currentAmount} PHP</span>
+                </div>
+                {success && message && (
+                  <div className="p-2 bg-green-50 border border-green-200 rounded text-xs mt-2">
+                    <p className="text-green-700 flex items-center">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                      {message}
+                    </p>
+                  </div>
+                )}
+              </div>
 
               {currentAmount > 0 ? (
                 <div className="p-3 bg-gray-50 rounded border border-gray-200">
                   <PayPalScriptProvider
                     options={initialOptions}
-                    onError={(err) => console.error("PayPal Script Error:", err)}
+                    onError={(err) =>
+                      console.error("PayPal Script Error:", err)
+                    }
                   >
                     <PayPalButtons
-                      style={{ layout: "vertical", color: "black", shape: "rect", label: "pay", height: 40 }}
+                      style={{
+                        layout: "vertical",
+                        color: "black",
+                        shape: "rect",
+                        label: "pay",
+                        height: 40,
+                      }}
                       createOrder={(data, actions) =>
                         actions.order.create({
-                          purchase_units: [{ amount: { value: currentAmount.toString() } }],
+                          purchase_units: [
+                            { amount: { value: currentAmount.toString() } },
+                          ],
                         })
                       }
-                      onApprove={(data, actions) => actions.order.capture().then(submit)}
-                      onError={(err) => console.error("PayPal Button Error:", err)}
+                      onApprove={(data, actions) =>
+                        actions.order.capture().then(submit)
+                      }
+                      onError={(err) =>
+                        console.error("PayPal Button Error:", err)
+                      }
                     />
                   </PayPalScriptProvider>
                   <div className="text-center text-xs text-gray-500 mt-2">
