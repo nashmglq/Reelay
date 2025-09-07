@@ -18,7 +18,7 @@ export const Payment = () => {
 
   const initialOptions = {
     "client-id": process.env.REACT_APP_PAYPAL,
-    currency: "USD",
+    currency: "PHP",
     intent: "capture",
   };
 
@@ -58,7 +58,7 @@ export const Payment = () => {
           <p className="text-gray-600 text-base">Choose a package or enter a custom amount</p>
           <div className="flex items-center justify-center mt-3 text-sm text-gray-500">
             <DollarSign className="w-4 h-4 mr-1" />
-            <span>1 USD = 50 Tickets</span>
+            <span>₱1 = 50 Tickets</span>
           </div>
      
         </div>
@@ -90,7 +90,7 @@ export const Payment = () => {
                     )}
                     <div className="text-center">
                       <div className={`text-xl font-bold ${selectedPackage?.id === pkg.id ? "text-white" : "text-gray-900"}`}>
-                        ${pkg.usd}
+                        ₱{pkg.usd}
                       </div>
                       <div className={`text-xs ${selectedPackage?.id === pkg.id ? "text-gray-200" : "text-gray-600"}`}>
                         {pkg.tickets.toLocaleString()} tickets
@@ -105,7 +105,7 @@ export const Payment = () => {
 
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Custom Amount (USD)
+                  Custom Amount (PHP)
                 </label>
                 <input
                   type="number"
@@ -128,7 +128,7 @@ export const Payment = () => {
             <div className="space-y-2 text-gray-600 text-sm">
               <div className="flex justify-between">
                 <span>Amount:</span>
-                <span>${currentAmount}</span>
+                <span>₱{currentAmount}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span>You'll receive:</span>
@@ -139,7 +139,7 @@ export const Payment = () => {
               </div>
               <div className="border-t pt-2 flex justify-between text-gray-900 font-semibold">
                 <span>Total:</span>
-                <span>${currentAmount} USD</span>
+                <span>₱{currentAmount} PHP</span>
               </div>
 
               {success && message && (
