@@ -52,7 +52,7 @@ export const Payment = () => {
 
   return (
     <motion.div
-      className="bg-gray-50 py-8 px-3 min-h-screen flex justify-center items-center"
+      className="py-8 px-3 min-h-screen flex justify-center items-center"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -75,7 +75,7 @@ export const Payment = () => {
 
         <div className="grid md:grid-cols-2 gap-6 items-stretch">
           <div className="space-y-4 flex flex-col">
-            <div className="bg-white rounded-xl shadow-lg p-5 flex-1">
+            <div className="bg-white rounded-xl shadow-lg p-5 flex-1 border-2 border-gray-50">
               <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                 <Ticket className="w-5 h-5 mr-2" /> Ticket Packages
               </h2>
@@ -147,7 +147,7 @@ export const Payment = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-5 space-y-4 flex-1 flex flex-col">
+          <div className="bg-white rounded-xl shadow-lg p-5 space-y-4 flex-1 flex flex-col border-2 border-gray-50">
             <h3 className="text-lg font-semibold text-gray-800">
               Order Summary
             </h3>
