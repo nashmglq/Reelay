@@ -45,7 +45,7 @@ export const Payment = () => {
   }, [success]);
 
   return (
-   <motion.div className="bg-gray-50 py-8 px-3 mt-10"
+   <motion.div className="bg-gray-50 py-8 px-3 min-h-screen flex justify-center items-center"
     initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}>
