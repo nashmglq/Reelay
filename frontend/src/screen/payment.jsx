@@ -57,7 +57,6 @@ export const Payment = () => {
           <h1 className="text-3xl font-bold text-gray-900 mb-1">Get More Tickets</h1>
           <p className="text-gray-600 text-base">Choose a package or enter a custom amount</p>
           <div className="flex items-center justify-center mt-3 text-sm text-gray-500">
-            <DollarSign className="w-4 h-4 mr-1" />
             <span>₱1 = 50 Tickets</span>
           </div>
      
