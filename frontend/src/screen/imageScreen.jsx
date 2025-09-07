@@ -81,12 +81,24 @@ export const ImageScreen = () => {
 
   const closeModal = () => setModalImage(null);
 
-  const downloadImage = () => {
+const downloadImage = async () => {
+  try {
+    const response = await fetch(modalImage, { mode: "cors" });
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
     const link = document.createElement("a");
-    link.href = modalImage;
+    link.href = url;
     link.download = "generated-image.png";
+    document.body.appendChild(link);
     link.click();
-  };
+    document.body.removeChild(link);
+
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error("Download failed", err);
+  }
+};
 
   return (
     <motion.div
@@ -175,7 +187,7 @@ export const ImageScreen = () => {
               className="w-full p-2 border rounded text-gray-700"
               onChange={(e) => setOriented(e.target.value)}
             >
-              <option value="">Select platform</option>
+              <option value="">Select Orientation</option>
               <option value="Landscape">Landscape</option>
               <option value="Portrait">Portrait</option>
             </select>
